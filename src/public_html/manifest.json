@@ -1,0 +1,20 @@
+{
+	"name": "Yeung Sin Hang",
+	"short_name": "YSH",
+	"icons": [
+		{
+			"src": "/~S151204/images/android-chrome-192x192.png?v=4",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/~S151204/images/android-chrome-256x256.png?v=4",
+			"sizes": "256x256",
+			"type": "image/png"
+		}
+	],
+	"start-url": "/~S151204/",
+	"theme_color": "DarkBlue",
+	"background_color": "#808080",
+	"display": "fullscreen"
+}

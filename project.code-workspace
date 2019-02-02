@@ -1,0 +1,39 @@
+{
+	"folders": [
+		{
+			"path": "build"
+		},
+		{
+			"path": "src",
+		}
+	],
+	"settings": {
+		"git.autofetch": true,
+		"gitProjectManager.baseProjectsFolders": [
+			"G:\\My Drive\\Computer\\Git Forks",
+			"C:\\Users\\secur\\Website"
+		],
+		"php.validate.executablePath": "C:\\Programs\\php\\php.exe",
+		"php.validate.run": "onType",
+		"php.suggest.basic": false,
+		"editor.insertSpaces": false,
+		"editor.detectIndentation": false,
+		"files.eol": "\n",
+	},
+	"extensions": {
+		"recommendations": [
+			"mrmlnc.vscode-apache",
+			"formulahendry.auto-complete-tag",
+			"mgmcdermott.vscode-language-babel",
+			"dbaeumer.vscode-eslint",
+			"eamodio.gitlens",
+			"oderwat.indent-rainbow",
+			"sirtori.indenticator",
+			"zignd.html-css-class-completion",
+			"christian-kohler.path-intellisense",
+			"felixfbecker.php-intellisense",
+			"wayou.vscode-todo-highlight",
+			"robertohuertasm.vscode-icons"
+		]
+	}
+}

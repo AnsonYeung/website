@@ -1,0 +1,3 @@
+FileETag MTime
+# Header set Cache-Control "max-age=604800, public, must-revalidate"
+Header set Cache-Control "max-age=0, no-cache"

@@ -1,0 +1,2 @@
+FileETag None
+Header set Cache-Control "public, only-if-cached, max-age=31556926, immutable, no-transform"

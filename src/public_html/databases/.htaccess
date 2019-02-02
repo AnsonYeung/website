@@ -1,0 +1,7 @@
+<Files "*.json">
+	AuthType Basic
+	AuthName "Access to server data"
+	AuthUserFile /home/student/y2015/S151204/.htpasswd
+	Require valid-user
+</Files>
+Header set Cache-Control "no-cache, no-store, must-revalidate"

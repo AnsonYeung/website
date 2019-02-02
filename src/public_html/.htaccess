@@ -1,0 +1,137 @@
+ErrorDocument 400 /~S151204/_/400.php
+ErrorDocument 401 /~S151204/_/401.php
+ErrorDocument 403 /~S151204/_/403.php
+ErrorDocument 404 /~S151204/_/404.php
+ErrorDocument 410 /~S151204/_/410.php
+ErrorDocument 503 /~S151204/_/503.php
+
+AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css text/javascript application/xml application/xhtml+xml application/rss+xml application/x-javascript
+
+# This configuations are actually for files/ and private/
+FileETag MTime
+<FilesMatch "\.html?$">
+	Header set Content-Type "text/html; charset=UTF-8"
+	Header set "X-UA-Compatable" "IE=edge"
+</FilesMatch>
+ExpiresActive On
+ExpiresDefault "A604800"
+# /etc/mime.types
+ExpiresByType "application/json" "A0"
+# "image/gif image/jpeg image/png image/tiff image/vnd.microsoft.icon"
+<Files "*.json">
+	FileETag None
+	Header unset ETag
+	Header set Cache-Control "no-cache, no-store, must-revalidate"
+</Files>
+<Files "*.php">
+	FileETag None
+	Header unset ETag
+	Header set Cache-Control "no-cache, no-store, must-revalidate"
+</Files>
+<FilesMatch "\.(ico|jpe?g|png|bmp|gif)$">
+	FileETag None
+	Header set Cache-Control "public, only-if-cached, max-age=31556926, immutable, no-transform"
+</FilesMatch>
+
+DirectorySlash Off
+RewriteEngine On
+RewriteBase "/~S151204/"
+
+# Maintenence break
+RewriteCond %{REMOTE_ADDR} !^119\.246\.80\.203
+RewriteCond %{REMOTE_ADDR} !^10\.0\.7\.2
+RewriteCond %{REQUEST_URI} !_/503.php$ [NC]
+RewriteCond %{REQUEST_URI} !_/503$ [NC]
+RewriteCond %{REQUEST_URI} !scripts/ [NC]
+RewriteCond %{REQUEST_URI} !images/ [NC]
+RewriteCond %{REQUEST_URI} !projects/processing.js/minecraft.html$ [NC]
+RewriteRule .* - [R=503,L]
+
+# Imaginative directories
+RewriteCond "%{REQUEST_URI}" "(.*)"
+RewriteRule "^user\/(\w+)$" "/~S151204/_/accounts?action=$1&REDIRECT_URI=%1" [NC,QSA,P]
+RewriteCond "%{REQUEST_URI}" "(.*)"
+RewriteRule "^admin\/(\w+)$" "/~S151204/_/admin?action=$1&REDIRECT_URI=%1" [NC,QSA,P]
+RewriteCond "%{REQUEST_URI}" "(.*)"
+RewriteRule "^profile\/(.+)$" "/~S151204/_/user?username=$1&REDIRECT_URI=%1" [NC,P]
+
+# Ban direct access of assets directories
+RewriteRule "^(_|databases|fonts|images|media|scripts|style)\/?$" - [R=404,L]
+RedirectMatch 410 "^\/~S151204\/files(\/.*)?"
+
+# Ban the usage of bad-url
+RewriteCond "%{ENV:REDIRECT_STATUS}" "^$"
+RewriteRule "(.*)\.php$" "$1" [E=R:true]
+RewriteCond "%{ENV:REDIRECT_STATUS}" "^$"
+RewriteRule "(.*\/)index$" "$1" [E=R:true]
+RewriteCond "%{ENV:REDIRECT_STATUS}" "^$"
+RewriteCond "%{REQUEST_URI}" "!^\/~S151204\/$"
+RewriteCond "%{REQUEST_FILENAME}" -d
+RewriteRule "(.*)\/$" "$1" [E=R:true]
+RewriteCond "%{ENV:R}" "true"
+RewriteRule "(.*)" "$1" [E=R:false,R=301]
+
+# Make url to be extensionless and without directory slash
+RewriteCond "%{REQUEST_FILENAME}" !-f
+RewriteCond "%{REQUEST_FILENAME}\.php" -f
+RewriteRule "(.*)" "$1.php" [L]
+RewriteCond "%{REQUEST_FILENAME}" !-f
+RewriteCond "%{REQUEST_FILENAME}\.html" -f
+RewriteRule "(.*)" "$1.html" [L]
+RewriteCond "%{REQUEST_FILENAME}" -d
+RewriteCond "%{REQUEST_URI}" "!\/$"
+RewriteRule "(.*)" "$1/" [L]
+RedirectMatch 301 "^/~S151204$" "/~S151204/"
+RedirectMatch 301 "^/~S151204/index$" "/~S151204/"
+RedirectMatch 301 "^/~S151204/admin/$" "/~S151204/admin"
+
+IndexOptions IgnoreCase FancyIndexing FoldersFirst NameWidth=* DescriptionWidth=* SuppressHTMLPreamble Charset=UTF-8 HTMLTable IconsAreLinks
+IndexOrderDefault Ascending Name
+IndexIgnore .htaccess .htpasswd private Desktop.ini Thumbs.db .DS_Store
+AddDescription "<span class='description'>MPEG Layer 3 Format</span>"                      .mp3
+AddDescription "<span class='description'>GZIP compressed TAR archive</span>"              .tgz .tar.gz
+AddDescription "<span class='description'>GZIP compressed archive</span>"                  .Z .z .gz
+AddDescription "<span class='description'>ZIP compressed archive</span>"                   .zip
+AddDescription "<span class='description'>RAR compressed archive</span>"                   .rar
+AddDescription "<span class='description'>TAR compressed archive</span>"                   .tar
+AddDescription "<span class='description'>ZIP compressed archive</span>"                   .zip
+AddDescription "<span class='description'>Windows executable file</span>"                  .exe
+AddDescription "<span class='description'>Common Gateway Interface</span>"                 .cgi
+AddDescription "<span class='description'>Joint Photographics Experts Group</span>"        .jpg .jpeg .jpe
+AddDescription "<span class='description'>Graphic Interchange Format</span>"               .gif
+AddDescription "<span class='description'>Portable Network Graphic</span>"                 .png
+AddDescription "<span class='description'>Vector graphic</span>"                           .ps .ai .eps
+AddDescription "<span class='description'>Hypertext Markup Language</span>"                .html .shtml .htm
+AddDescription "<span class='description'>Cascading Style Sheet</span>"                    .css
+AddDescription "<span class='description'>DocType Definition</span>"                       .dtd
+AddDescription "<span class='description'>Extensible Markup Language</span>"               .xml
+AddDescription "<span class='description'>Win32 compressed HTML help</span>"               .chm
+AddDescription "<span class='description'>Adobe Portable Document Format</span>"           .pdf
+AddDescription "<span class='description'>Plain text file</span>"                          .txt .nfo .faq .readme
+AddDescription "<span class='description'>Unix man page</span>"                            .man
+AddDescription "<span class='description'>Email data</span>"                               .eml .mbox
+AddDescription "<span class='description'>Microsoft Word document</span>"                  .doc
+AddDescription "<span class='description'>PHP: Hypertext Preprocessor script</span>"       .php .php3 .php4
+AddDescription "<span class='description'>PHP: Hypertext Preprocessor source code</span>"  .phps
+AddDescription "<span class='description'>Javascript Object Notation</span>"               .json
+AddDescription "<span class='description'>Javascript</span>"                               .js
+AddDescription "<span class='description'>Java code</span>"                                .java
+AddDescription "<span class='description'>Unix shell script</span>"                        .sh .shar .csh .ksh .command
+AddDescription "<span class='description'>Mac OS X shell script</span>"                    .command
+AddDescription "<span class='description'>Configuration file</span>"                       .conf
+AddDescription "<span class='description'>Mac OS X terminal</span>"                        .term
+AddDescription "<span class='description'>BitTorrent file</span>"                          .torrent
+AddDescription "<span class='description'>Windows link</span>"                             .lnk .url
+AddDescription "[<span class='description'>Images</span>]"                                 images
+AddDescription "[<span class='description'>Private files</span>]"                          private
+AddDescription "[<span class='description'>Javascripts</span>]"                            scripts
+AddDescription "[<span class='description'>Cascading Style Sheets</span>]"                 style
+AddDescription "[<span class='description'>Public access files</span>]"                    files
+AddDescription "[<span class='description'>Browse in classroom</span>]"                    browse
+AddDescription "[<span class='description'>Medias</span>]"                                 media
+AddDescription "[<span class='description'>Resource For classroom</span>]"                 school
+AddDescription "[<span class='description'>Public full access files</span>]"               public
+AddDescription "<span class='description'></span>"                                         ..
+AddDescription "<span class='description'>File</span>"                                     *
+HeaderName /~S151204/_/header.php
+ReadmeName /~S151204/_/readme.php

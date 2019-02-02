@@ -1,0 +1,116 @@
+===================================================================
+  _________                                 .____                  
+ /   _____/ ______________  __ ___________  |    |    ____   ____  
+ \_____  \_/ __ \_  __ \  \/ // __ \_  __ \ |    |   /  _ \ / ___\ 
+ /        \  ___/|  | \/\   /\  ___/|  | \/ |    |__(  <_> ) /_/  >
+/_______  /\___  >__|    \_/  \___  >__|    |_______ \____/\___  / 
+        \/     \/                 \/                \/    /_____/  
+
+===================================================================
+
+[2019-01-08T14:59:41+08:00] S150646 logged in.
+
+[2019-01-08T15:06:44+08:00] WARNING at /home/student/y2015/S151204/public_html/private/reader.php:123 Invalid argument supplied for foreach()
+    at err_handler (/home/student/y2015/S151204/public_html/private/reader.php:123)
+
+[2019-01-08T15:09:34+08:00] S150646 logged in.
+
+[2019-01-17T16:02:56+08:00] {"wrapper_type":"PHP","stream_type":"Input","mode":"rb","unread_bytes":0,"seekable":false,"uri":"php:\/\/input","timed_out":false,"blocked":true,"eof":false}
+
+[2019-01-17T19:05:38+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:7 file_put_contents(): Only 0 of 1 bytes written, possibly out of free disk space
+    at err_handler
+    at file_put_contents("\/home\/club\/student\/cron.sh", "?") (/home/student/y2015/S151204/public_html/private/editor.php:7)
+
+[2019-01-17T19:34:28+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:7 file_put_contents(): Only 0 of 4 bytes written, possibly out of free disk space
+    at err_handler
+    at file_put_contents("\/home\/club\/student\/public_html_archive20180918\/wp-test.php", "test") (/home/student/y2015/S151204/public_html/private/editor.php:7)
+
+[2019-01-19T15:24:37+08:00] admin logged in.
+
+[2019-01-19T15:48:58+08:00] admin logged out.
+
+[2019-01-19T15:49:06+08:00] admin logged out.
+
+[2019-01-19T15:49:12+08:00] root logged in.
+
+[2019-01-19T15:53:37+08:00] admin logged out.
+
+[2019-01-19T16:20:25+08:00] NOTICE at /home/student/y2015/S151204/public_html/_/accounts.php:152 Undefined variable: username
+    at err_handler (/home/student/y2015/S151204/public_html/_/accounts.php:152)
+
+[2019-01-19T16:20:25+08:00] NOTICE at /home/student/y2015/S151204/public_html/_/accounts.php:153 Undefined variable: username
+    at err_handler (/home/student/y2015/S151204/public_html/_/accounts.php:153)
+
+[2019-01-19T16:20:25+08:00]  logged out.
+
+[2019-01-19T16:20:27+08:00] root logged in.
+
+[2019-01-19T19:52:01+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 file_get_contents(/home/student/y2015/S151204/public_html/php/navbar.php): failed to open stream: No such file or directory
+    at err_handler
+    at file_get_contents("\/home\/student\/y2015\/S151204\/public_html\/php\/navbar.php") (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-19T19:52:10+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 file_get_contents(/home/student/y2015/S151204/public_html/php/navbar.php): failed to open stream: No such file or directory
+    at err_handler
+    at file_get_contents("\/home\/student\/y2015\/S151204\/public_html\/php\/navbar.php") (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-19T20:09:12+08:00] root logged in.
+
+[2019-01-19T20:15:12+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 fopen(/home/20180806.sql): failed to open stream: Value too large for defined data type
+    at err_handler
+    at fopen("\/home\/20180806.sql", "r") (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-19T20:15:12+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 fpassthru() expects parameter 1 to be resource, boolean given
+    at err_handler
+    at fpassthru(false) (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-19T20:15:24+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 fopen(/home/20180806.sql): failed to open stream: Value too large for defined data type
+    at err_handler
+    at fopen("\/home\/20180806.sql", "r") (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-19T20:15:24+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 fpassthru() expects parameter 1 to be resource, boolean given
+    at err_handler
+    at fpassthru(false) (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-19T20:23:03+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 fopen(/home/20180806.sql): failed to open stream: Value too large for defined data type
+    at err_handler
+    at fopen("\/home\/20180806.sql", "r") (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-19T20:23:03+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 fpassthru() expects parameter 1 to be resource, boolean given
+    at err_handler
+    at fpassthru(false) (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-20T18:45:58+08:00] NOTICE at /home/student/y2015/S151204/public_html/private/explorer.php:48 Undefined variable: file
+    at err_handler (/home/student/y2015/S151204/public_html/private/explorer.php:48)
+
+[2019-01-20T18:46:25+08:00] NOTICE at /home/student/y2015/S151204/public_html/private/explorer.php:48 Undefined variable: file
+    at err_handler (/home/student/y2015/S151204/public_html/private/explorer.php:48)
+
+[2019-01-21T16:41:50+08:00] NOTICE at /home/student/y2015/S151204/public_html/private/explorer.php:48 Undefined variable: file
+    at err_handler (/home/student/y2015/S151204/public_html/private/explorer.php:48)
+
+[2019-01-21T16:51:17+08:00] NOTICE at /home/student/y2015/S151204/public_html/private/explorer.php:48 Undefined variable: file
+    at err_handler (/home/student/y2015/S151204/public_html/private/explorer.php:48)
+
+[2019-01-21T16:54:19+08:00] NOTICE at /home/student/y2015/S151204/public_html/private/explorer.php:48 Undefined variable: file
+    at err_handler (/home/student/y2015/S151204/public_html/private/explorer.php:48)
+
+[2019-01-21T16:57:31+08:00] NOTICE at /home/student/y2015/S151204/public_html/private/explorer.php:48 Undefined variable: file
+    at err_handler (/home/student/y2015/S151204/public_html/private/explorer.php:48)
+
+[2019-01-28T17:35:37+08:00] S150646 logged in via Google SignIn.
+
+[2019-01-29T23:38:35+08:00] S150646 logged in via Google SignIn.
+
+[2019-01-30T02:52:57+08:00] WARNING at /home/student/y2015/S151204/public_html/admin.php:175 Invalid argument supplied for foreach()
+    at err_handler (/home/student/y2015/S151204/public_html/admin.php:175)
+
+[2019-01-30T22:16:50+08:00] root logged in.
+
+[2019-01-31T18:23:58+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 fopen(/home/student/y2015/S151204/vendor/main.php): failed to open stream: No such file or directory
+    at err_handler
+    at fopen("\/home\/student\/y2015\/S151204\/vendor\/main.php", "r") (/home/student/y2015/S151204/public_html/private/editor.php:5)
+
+[2019-01-31T18:23:58+08:00] WARNING at /home/student/y2015/S151204/public_html/private/editor.php:5 fpassthru() expects parameter 1 to be resource, boolean given
+    at err_handler
+    at fpassthru(false) (/home/student/y2015/S151204/public_html/private/editor.php:5)
+

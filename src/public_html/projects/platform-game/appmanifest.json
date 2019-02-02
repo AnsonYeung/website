@@ -1,0 +1,28 @@
+﻿{
+	"name": "Platform Game",
+	"short_name": "PG",
+	"start_url": "play",
+	"display": "fullscreen",
+	"orientation": "any",
+	"icons":[{
+		"src": "/~S151204/images/icon-16.png",
+		"sizes": "16x16",
+		"type": "image/png"
+	}, {
+		"src": "/~S151204/images/icon-32.png",
+		"sizes": "32x32",
+		"type": "image/png"
+	}, {
+		"src": "/~S151204/images/icon-128.png",
+		"sizes": "128x128",
+		"type": "image/png"
+	}, {
+		"src": "/~S151204/images/icon-256.png",
+		"sizes": "144x144",
+		"type": "image/png"
+	}, {
+		"src": "/~S151204/images/icon-256.png",
+		"sizes": "256x256",
+		"type": "image/png"
+	}]
+}

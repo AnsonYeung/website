@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Access to private"
+AuthUserFile /home/student/y2015/S151204/.htpasswd
+Require valid-user
