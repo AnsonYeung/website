@@ -17,11 +17,20 @@
 	resize: vertical;
 }
 </style>
+<script src="/~S151204/scripts/NA.js" type="module" async id="NA"></script>
 <script nonce="<?php echo $script_nonce;?>">
-safeReq(["NA", "/~S151204/projects/NA-helper/NA?callback=define"], function (NA, assets) {
-	NA.assets = assets;
-});
+function loadAssets(assets) {
+	if (typeof NA !== "undefined") {
+		NA.assets = assets;
+	} else {
+		document.getElementById("NA").addEventListener("load", function onNALoad() {
+			NA.assets = assets;
+			document.getElementById("NA").removeEventListener("load", onNALoad);
+		});
+	}
+}
 </script>
+<script src="NA-helper/NA?callback=loadAssets" async defer></script>
 <?php include "../../../php/navbar.php" ?>
 <header class="border border-left-0 border-right-0 border-top-0 hscroll mb-3 mt-5 pb-2"><h1>Newspaper Assignment Helper</h1></header>
 <section id="input">

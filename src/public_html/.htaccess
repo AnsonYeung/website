@@ -38,14 +38,14 @@ RewriteEngine On
 RewriteBase "/~S151204/"
 
 # Maintenence break
-RewriteCond %{REMOTE_ADDR} !^119\.246\.80\.203
-RewriteCond %{REMOTE_ADDR} !^10\.0\.7\.2
-RewriteCond %{REQUEST_URI} !_/503.php$ [NC]
-RewriteCond %{REQUEST_URI} !_/503$ [NC]
-RewriteCond %{REQUEST_URI} !scripts/ [NC]
-RewriteCond %{REQUEST_URI} !images/ [NC]
-RewriteCond %{REQUEST_URI} !projects/processing.js/minecraft.html$ [NC]
-RewriteRule .* - [R=503,L]
+# RewriteCond %{REMOTE_ADDR} !^119\.246\.80\.203
+# RewriteCond %{REMOTE_ADDR} !^10\.0\.7\.2
+# RewriteCond %{REQUEST_URI} !_/503.php$ [NC]
+# RewriteCond %{REQUEST_URI} !_/503$ [NC]
+# RewriteCond %{REQUEST_URI} !scripts/ [NC]
+# RewriteCond %{REQUEST_URI} !images/ [NC]
+# RewriteCond %{REQUEST_URI} !projects/processing.js/minecraft.html$ [NC]
+# RewriteRule .* - [R=503,L]
 
 # Imaginative directories
 RewriteCond "%{REQUEST_URI}" "(.*)"

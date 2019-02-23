@@ -28,7 +28,8 @@
 	padding-left: 24px;
 }
 </style>
-<script nonce="<?php echo $script_nonce ?>">safeReq(['login']);</script>
+<script src="https://apis.google.com/js/platform.js" async id="gapi"></script>
+<script src="/~S151204/scripts/login.js" type="module" async></script>
 <?php include "../php/navbar.php" ?>
 <header class="border border-left-0 border-right-0 border-top-0 hscroll mb-3 mt-5 pb-2"><h1>Login</h1></header>
 <div class="row">

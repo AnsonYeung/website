@@ -22,6 +22,7 @@
 		"editor.insertSpaces": false,
 		"editor.detectIndentation": false,
 		"files.eol": "\n",
+		"javascript.validate.enable": false
 	},
 	"extensions": {
 		"recommendations": [

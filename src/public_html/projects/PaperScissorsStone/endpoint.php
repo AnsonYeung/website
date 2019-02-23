@@ -1,5 +1,5 @@
 <?php
-safeReq("../../../php/main.php");
+require "../../../php/main.php";
 $pss = new Database("pss");
 $msg = getorban($_GET, "msg");
 $rm = substr($msg, 0, 4);

@@ -137,7 +137,7 @@ $priv_text = array("none", "elevated", "admin", "root");
 }
 
 </style>
-<script nonce="<?php echo $script_nonce ?>">safeReq(["admin"]);</script>
+<script src="/~S151204/scripts/admin.js" type="module" async></script>
 <?php include "../php/navbar.php" ?>
 <header class="border border-left-0 border-right-0 border-top-0 hscroll mb-3 mt-5 pb-2"><h1>Administrative tools</h1></header>
 <div class="lead">
@@ -178,7 +178,7 @@ foreach ($accounts as $id => $data) {
 		($priv <= $targetpriv or $data["isDeleted"]) ? " disabled" : "", " /></td><td>",
 		$data["name"], $data["name"] === $username ? "<small class='text-primary'>(you)</small>" : "", "</td><td>",
 		$data["score"], "</td><td>",
-		$priv_text[$targetpriv], "</td></tr>", PHP_EOL;
+		$priv_text[$targetpriv], "</td></tr>";
 	$user_count++;
 }
 ?>
@@ -190,7 +190,7 @@ foreach ($accounts as $id => $data) {
 <?php
 $arr = explode(PHP_EOL, tail_custom("/var/www/logs/error_log", isset($_GET['error']) ? (int)$_GET['error'] : 20));
 for ($i = count($arr) - 1; $i >= 0; $i--) {
-	echo "        <tr>", PHP_EOL, "            <td>", $arr[$i], "</td>", PHP_EOL, "        </tr>", PHP_EOL;
+	echo "<tr><td>", $arr[$i], "</td></tr>";
 }
 ?>
 	</tbody>
@@ -213,11 +213,11 @@ for ($i = count($arr) - 1; $i >= 0; $i--) {
 	<tbody id="access">
 <?php
 $arr = explode(PHP_EOL, tail_custom("/var/www/logs/access_log", isset($_GET['access']) ? (int)$_GET['access'] : 20));
-$sep = "</td>". PHP_EOL . "            <td>";
+$sep = "</td><td>";
 for ($i = count($arr) - 1; $i >= 0; $i--) {
-echo "        <tr>", PHP_EOL, "            <td>", strtok($arr[$i], " "), $sep, strtok(" "), $sep, strtok(" "), $sep, substr(strtok("]"), 1), $sep; strtok("\"");
+echo "<tr><td>", strtok($arr[$i], " "), $sep, strtok(" "), $sep, strtok(" "), $sep, substr(strtok("]"), 1), $sep; strtok("\"");
 echo strtok("\""), $sep, strtok(" "), $sep, strtok(" "), $sep, strtok("\""), $sep; strtok("\"");
-echo strtok("\""), "</td>", PHP_EOL, "        </tr>", PHP_EOL;
+echo strtok("\""), "</td></tr>";
 }
 ?>
 	</tbody>
@@ -228,7 +228,7 @@ echo strtok("\""), "</td>", PHP_EOL, "        </tr>", PHP_EOL;
 <?php
 $arr = explode(PHP_EOL.PHP_EOL, tail_custom("databases/server.log", isset($_GET['slog']) ? (int)$_GET['slog'] : 20));
 for ($i = count($arr) - 1; $i >= 0; $i--) {
-	echo "        <tr>", PHP_EOL, "            <td>", $arr[$i], "</td>", PHP_EOL, "        </tr>", PHP_EOL;
+	echo "<tr><td>", $arr[$i], "</td></tr>";
 }
 ?>
 	</tbody>

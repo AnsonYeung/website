@@ -1,4 +1,6 @@
-define(["jquery"], function ($) {
+import YSH from "./main.js";
+
+YSH.jQueryPromise.then(function () {
 	$("output").toggleClass("hide").hide();
 	$("form").submit(function (e) {
 		e.preventDefault();

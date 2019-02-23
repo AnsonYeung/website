@@ -1,8 +1,8 @@
 <?php include_once "../../php/head.php" ?>
 <title>Maintenence break - YSH</title>
 <meta name="googlebot" content="noindex" />
-<style nonce="<?php echo $style_nonce ?>"<?php echo ">\n"; include __DIR__ . "/../style/bootstrap.inline.css"; echo "/* Page specific CSS "; ?>>/**/
-
+<style nonce="<?php echo $style_nonce ?>">
+<?php include __DIR__ . "/../style/bootstrap.inline.css" ?>
 iframe {
 	box-sizing: initial;
 }

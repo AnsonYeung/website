@@ -1,4 +1,6 @@
-requirejs(["jquery"], function ($) {
+import YSH from "./main.js";
+
+YSH.jQueryPromise.then(function () {
 	$("form").submit(function (e) {
 		e.preventDefault();
 		sessionStorage.username = $("#username").val();
@@ -19,13 +21,13 @@ requirejs(["jquery"], function ($) {
 	});
 });
 
-requirejs(["gapi"], function (gapi) {
+const init = function () {
 	gapi.load("auth2", function (auth2) {
 		auth2 = gapi.auth2.init({
 			client_id: "1093588347904-bnd4hlks49ahnqelh7fedg8oqor9n51q.apps.googleusercontent.com",
 			cookiepolicy: "single_host_origin"
 		});
-		requirejs(["jquery"], ($) => {
+		YSH.jQueryPromise.then(() => {
 			auth2.attachClickHandler(document.getElementById("gsignin"), {}, function (gUser) {
 				$("#wait").removeClass("d-none");
 				$("#gsignin").addClass("d-none");
@@ -57,4 +59,14 @@ requirejs(["gapi"], function (gapi) {
 			});
 		});
 	});
-});
+};
+
+if (window.gapi) {
+	init();
+} else {
+	const g = document.getElementById("gapi");
+	g.addEventListener("load", function onLoad() {
+		g.removeEventListener("load", onLoad);
+		init();
+	});
+}

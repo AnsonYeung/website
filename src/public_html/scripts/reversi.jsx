@@ -1,5 +1,4 @@
-define(["react", "react-dom", "prop-types"], function (React, ReactDOM, PropTypes) {
-
+window.ready.then(function () {
 	class Square extends React.Component {
 		render() {
 			return (
@@ -45,5 +44,4 @@ define(["react", "react-dom", "prop-types"], function (React, ReactDOM, PropType
 		<Game />,
 		document.getElementById("base")
 	);
-
 });

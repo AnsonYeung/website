@@ -1,9 +1,10 @@
 <?php include "../php/head.php"; if (isset($username)): ?><script>location = (sessionStorage.continue || "/~S151204/") + "?";</script><?php endif; ?>
 <title>Sign Up - YSH</title>
 <style nonce="<?php echo $style_nonce ?>">
-<?php include "style/bootstrap.inline.css" ?>
+<?php include "style/bootstrap.inline.css" ?>/**/
 </style>
-<script nonce="<?php echo $script_nonce ?>">safeReq(['signup']);</script>
+<script src="https://apis.google.com/js/platform.js" async id="gapi"></script>
+<script src="/~S151204/scripts/signup.js" type="module" async></script>
 <?php include "../php/navbar.php" ?>
 <header class="border border-left-0 border-right-0 border-top-0 hscroll mb-3 mt-5 pb-2"><h1>Register</h1></header>
 <div class="row">

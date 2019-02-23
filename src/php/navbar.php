@@ -1,7 +1,4 @@
-<!-- htmlmin:ignore -->
-<?php require_once "head.php" ?>
-</head>
-<body>
+<?php require_once "head.php" ?><!-- htmlmin:ignore --></head><body><!-- htmlmin:ignore -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 <div class="container">
 	<a class="navbar-brand" href="/~S151204/">Yeung Sin Hang<span class="d-none d-sm-inline">'s homepage</span></a>
@@ -47,9 +44,7 @@
 	</div>
 </div>
 </nav>
-<div class="body">
-<div class="container">
+<!-- htmlmin:ignore --><div class="body"><div class="container"><!-- htmlmin:ignore -->
 <div class="alerts">
 	<noscript><div class="alert alert-warning" role="alert">WARNING: JavaScript is not turned on, this site require it to add interactive content to the webpage.</div></noscript>
 </div>
-<!-- htmlmin:ignore -->

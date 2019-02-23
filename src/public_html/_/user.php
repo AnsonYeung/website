@@ -15,7 +15,10 @@ if (isset($_SESSION['151204-username']) and $_SESSION['151204-username'] === $us
 }
 ?>
 <title>User <?php echo $user_name ?> - YSH</title>
-<style nonce="<?php echo $style_nonce ?>"<?php echo ">\n"; include __DIR__ . "/../style/bootstrap.inline.css"; echo "/* Page specific CSS "; ?>>/**/
+<script src="https://apis.google.com/js/platform.js" async id="gapi"></script>
+<script src="/~S151204/scripts/profile.js" type="module" async></script>
+<style nonce="<?php echo $style_nonce ?>">
+<?php include __DIR__ . "/../style/bootstrap.inline.css" ?>
 @import url('https://fonts.googleapis.com/css?family=Roboto:500');
 
 h1 {
@@ -65,7 +68,7 @@ h1 {
 	<span>Sign in with Google</span>
 </div>
 <p id="gsuccess">Google account bind successfully.</p>
-<script nonce="<?php echo $script_nonce ?>">document.getElementById("gsuccess").style.display="none";safeReq(['profile']);</script>
+<script nonce="<?php echo $script_nonce ?>">document.getElementById("gsuccess").style.display="none";</script>
 <p id="wait" class="d-none">Please wait while our server is processing.</p>
 <p>This page is under development...</p>
 <?php } else { ?>

@@ -1,17 +1,22 @@
-define(["jquery"], function ($) {
-	// Fetch users, pages, etc, here.
-	// 1. preload next page content
-	var userCurrentPage = 0;
-	var userPages = [$("#user").html()];
-	var describe = {
+import YSH from "./main.js";
+
+// Fetch users, pages, etc, here.
+// 1. preload next page content
+YSH.jQueryPromise.then(() => {
+	let userCurrentPage = 0;
+	let userPages = [document.getElementById("user").innerHTML];
+	/**
+	 * @type {Object<string, string>}
+	 */
+	const describe = {
 		"up": "upgrade",
 		"down": "downgrade",
 		"del": "delete"
 	};
-	var submit = function () {
-		var users = [];
-		$(":checkbox[value]:checked").each(function () {
-			users.push(this.value);
+	const submit = function () {
+		let users = [];
+		document.querySelector("[value]").forEach((elem) => {
+			users.push(elem.value);
 		});
 		if (users.length === 0) return;
 		if (confirm("Are you sure to " + describe[this.id] + " " + users.join(", ") + "?")) {
@@ -64,15 +69,15 @@ define(["jquery"], function ($) {
 	if (window.EventSource) {
 		const sessionId = document.cookie.split("PHPSESSID=")[1].split(";")[0];
 		$(new EventSource("//moondanz.tanghin.edu.hk/~S151204/admin?EventSource=access&rows=" + $("#access").children().length +
-                "&PHPSESSID=" + sessionId)).on("update", function (e) {
+				"&PHPSESSID=" + sessionId)).on("update", function (e) {
 			$("#access").html(e.originalEvent.data);
 		});
 		$(new EventSource("//moondanz.tanghin.edu.hk/~S151204/admin?EventSource=error&rows=" + $("#error").children().length +
-                "&PHPSESSID=" + sessionId)).on("update", function (e) {
+				"&PHPSESSID=" + sessionId)).on("update", function (e) {
 			$("#error").html(e.originalEvent.data);
 		});
 		$(new EventSource("//moondanz.tanghin.edu.hk/~S151204/admin?EventSource=slog&rows=" + $("#slog").children().length * 2 +
-                "&PHPSESSID=" + sessionId)).on("update", function (e) {
+				"&PHPSESSID=" + sessionId)).on("update", function (e) {
 			$("#slog").html(e.originalEvent.data);
 		});
 	} else {

@@ -54,6 +54,7 @@ header_remove("Content-Security-Policy");
 }
 </style>
 <script nonce="<?php echo $script_nonce ?>">
+/** https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js */
 if (location.search === "") {
 	history.replaceState({}, "Server Editor - YSH", "?dir=/home/student/y2015/S151204/public_html/index.php");
 }
