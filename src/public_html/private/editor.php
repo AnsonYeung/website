@@ -18,6 +18,7 @@ include_once "../../php/head.php";
 header_remove("Content-Security-Policy");
 ?>
 <title>Server Editor - YSH</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js" async defer id="acejs"></script>
 <style nonce="<?php echo $style_nonce ?>">
 <?php include "../style/bootstrap.inline.css" ?>
 .window {
@@ -53,12 +54,24 @@ header_remove("Content-Security-Policy");
 	height: 500px;
 }
 </style>
-<script nonce="<?php echo $script_nonce ?>">
-/** https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js */
+<script nonce="<?php echo $script_nonce ?>" type="module">
+import { YSH } from "../scripts/main.js";
 if (location.search === "") {
 	history.replaceState({}, "Server Editor - YSH", "?dir=/home/student/y2015/S151204/public_html/index.php");
 }
-safeReq(["ace/ace"], function (ace) {
+
+const acePromise = new Promise(resolve => {
+	if (typeof ace !== "undefined") {
+		resolve();
+	} else {
+		document.getElementById("acejs").addEventListener("load", function onAceLoaded() {
+			document.getElementById("acejs").removeEventListener("load", onAceLoaded);
+			resolve();
+		});
+	}
+});
+
+acePromise.then(function () {
 	const editor = ace.edit("editor", {
 		mode: "ace/mode/text",
 		showPrintMargin: false
@@ -83,7 +96,7 @@ safeReq(["ace/ace"], function (ace) {
 		delete window.bigFile;
 	}
 });
-safeReq(["jquery"], () => {
+YSH.jQueryPromise.then(() => {
 	$("#back").click(history.back.bind(history));
 	$("#forward").click(history.forward.bind(history));
 	$("#parent").click(() => {
@@ -101,12 +114,16 @@ safeReq(["jquery"], () => {
 		}
 	});
 	$.get("?get=<?php echo rawurlencode($file); ?>", (bigFile) => {
-		safeReq(["ace/ace"], function (ace) {
-			if (window.editor) editor.setValue(bigFile);
-			else window.bigFile = bigFile;
+		acePromise.then(function () {
+			if (window.editor) {
+				editor.setValue(bigFile);
+			} else {
+				window.bigFile = bigFile;
+			}
 		});
 	});
 });
+
 </script>
 <?php include "../../php/navbar.php" ?>
 <h1 class="border border-left-0 border-right-0 border-top-0 hscroll mb-3 mt-5 pb-2 text-center d-none d-md-block">=== SERVER EDITOR ===</h1>

@@ -99,11 +99,12 @@ include_once "../../php/head.php"; ?>
 	background-color: rgba(0, 0, 0, 0.175);
 }
 </style>
-<script nonce="<?php echo $script_nonce ?>">
+<script nonce="<?php echo $script_nonce ?>" type="module">
+import { YSH } from "../scripts/main.js";
 if (location.search === "") {
 	history.replaceState({}, "Server Editor - YSH", "?dir=/home/student/y2015/S151204/public_html");
 }
-safeReq(["jquery"], function () {
+YSH.jQueryPromise.then(function () {
 	$("#back").click(history.back.bind(history));
 	$("#forward").click(history.forward.bind(history));
 	$("#parent").click(() => {

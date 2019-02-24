@@ -19,7 +19,7 @@ if (isset($_POST["command"])) {
 }
 include_once "/home/student/y2015/S151204/php/head.php";
 ?>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" />
+<link rel="preload" as="font" href="https://fonts.gstatic.com/s/ubuntumono/v8/KFOjCneDtsqEr0keqCMhbCc3CsTKlA.woff2">
 <title>Command line - S151204"s workshop</title>
 <meta name="keywords" content="S151204's workshop, WebSocket, demo" />
 <meta name="description" content="WebSocket demo" />
@@ -41,7 +41,7 @@ b {color:white}
 
 div.container-fluid {background-color:black;color:rgba(255, 255, 255, 0.5);font-size:2.43vw;font-family:"Ubuntu Mono",monospace}
 </style>
-<script nonce="<?php echo $script_nonce ?>">safeReq(["shell"]);</script>
+<script src="../scripts/shell.js" type="module" async></script>
 <?php include "/home/student/y2015/S151204/php/navbar.php" ?>
 <header class="page-header"><h1>Shell<small> - Make sure you know what you are doing before using commands</small></h1></header>
 <div class="jumbotron">
@@ -51,11 +51,12 @@ div.container-fluid {background-color:black;color:rgba(255, 255, 255, 0.5);font-
 	<li>Commands are sent separately and so commands like cd won't work.</li>
 	<li>Commands are executed using the current directory, so please don"t do something really bad or this directory will be banned from using commands.</li></ul></p>
 </div>
-</div>
+<!-- htmlmin:ignore --></div><!-- htmlmin:ignore -->
 <div class="container-fluid">
 	<div id="log"></div>
 	<div id="prefix">apache@moondanz.tanghin.edu.hk:<?php echo substr(__DIR__, 0, 27) === $home ? "~".substr(__DIR__, 27) : __DIR__ ?>$&nbsp;</div>
-	<div id="command-container"><input id="command"></input></div>
+	<div id="command-container"><input id="command"></div>
 </div>
-<div class="container">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" />
+<!-- htmlmin:ignore --><div class="container"><!-- htmlmin:ignore -->
 <?php include "/home/student/y2015/S151204/php/footer.php" ?>

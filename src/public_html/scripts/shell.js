@@ -1,4 +1,6 @@
-define(["jquery"], function ($) {
+import { YSH } from "./main.js";
+
+YSH.jQueryPromise.then(function () {
 	$(function () {
 		const commandBox = $("#command");
 		const prefix = $("#prefix");

@@ -33,11 +33,6 @@ YSH.jQueryPromise.then(function () {
 			);
 		}
 
-		if (this.styleSheets[0].cssRules !== null && this.styleSheets[0].cssRules.length === 0 && this.cookie.indexOf("school=") === -1) {
-			document.cookie = "school=true; path=/~S151204";
-			location.reload();
-		}
-
 
 		$("#activate-school").click(function () {
 			document.cookie = "school=true; path=/~S151204";

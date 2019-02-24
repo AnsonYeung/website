@@ -59,7 +59,8 @@ include_once "../../php/head.php";
 <?php include "../style/bootstrap.inline.css" //?>
 </style>
 <script nonce="<?php echo $script_nonce ?>">
-safeReq(["jquery"], function () {
+import { YSH } from "../scripts/main.js";
+YSH.jQueryPromise.then(function () {
 	var $data;
 	$("html").on("click", ".no-data", function () {
 		$data.hide();

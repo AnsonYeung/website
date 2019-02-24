@@ -1,8 +1,7 @@
 <?php include_once "../php/head.php" ?>
 <title>Yeung Sin Hang</title>
 <meta name="keywords" content="YSH, Yeung Sin Hang, Hacking Devs, Hacking Developers, S151204's workshop, S151204, computer, programming" />
-<meta name="description" content="This is a webpage to introduce Yeung Sin Hang who has a student ID of S151204 in Tang Hin.
-This site was created by him and there are a lot of programs here. Let's use the programs!" />
+<meta name="description" content="This is a webpage to introduce Yeung Sin Hang who has a student ID of S151204 in Tang Hin. This site was created by him and there are a lot of programs here. Let's use the programs!" />
 <meta name="googlebot" content="noarchieve" />
 <style nonce="<?php echo $style_nonce ?>">
 <?php include "style/bootstrap.inline.css" ?>
