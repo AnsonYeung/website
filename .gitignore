@@ -1,3 +1,4 @@
 src/public_html/databases/*.json
 src/composer.json
 src/public_html/databases/server.log
+.htpasswd
