@@ -74,10 +74,10 @@ header("Content-Security-Policy: " . $csp . "; report-uri /~S151204/csp");
 <link rel="manifest" href="/~S151204/manifest.json?v=4" />
 <link rel="mask-icon" href="/~S151204/images/safari-pinned-tab.svg?v=4" color="#808080" />
 <link rel="shortcut icon" href="/~S151204/images/favicon.ico?v=4" />
-<!-- htmlmin:ignore --><!--[if lt IE 9]><!-- htmlmin:ignore -->
+<!--[if lt IE 9]>
 <script src="//oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<!-- htmlmin:ignore --><![endif]--><!-- htmlmin:ignore -->
+<![endif]-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" async defer id="popper"></script>
 <script src="/~S151204/scripts/main.js" type="module" async></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.2.5/polyfill.min.js" async defer></script>

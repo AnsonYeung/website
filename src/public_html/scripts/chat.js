@@ -1,4 +1,5 @@
-define(["jquery"], function () {
+import { YSH } from "./main.js";
+YSH.jQueryPromise.then(function () {
 	$(function ($) {
 		sessionStorage.username = $("#nav-content>>a:eq(2)").text().trim();
 		var getData = function (e) {
