@@ -5,19 +5,35 @@ YSH.jsImport = function (args) {
 	for (const i in args) {
 		promises.push(import(args[i]));
 	}
-	return Promise.race(promises);
+	return Promise.all(promises);
 };
 
-YSH.jQueryPromise = YSH.jsImport(["https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js", "./jquery.min.js"]);
+YSH.jQueryPromise = YSH.jsImport(["https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/jquery.min.js"]);
 
 Promise.all([
 	YSH.jQueryPromise,
 	new Promise(resolve => {
-		document.getElementById("popper").addEventListener("load", resolve.bind(null));
+		if (typeof Popper === "undefined") {
+			document.getElementById("popper").addEventListener("load", resolve.bind(null));
+		} else {
+			resolve();
+		}
 	})
 ]).then(
-	YSH.jsImport(["https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js", "./bootstrap.min.js"])
+	YSH.jsImport(["https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/bootstrap.min.js"])
 );
+
+const loadCss = function () {
+	const cssDiv = document.createElement("div");
+	cssDiv.innerHTML = document.getElementById("deferred-css").innerHTML;
+	document.body.appendChild(cssDiv);
+};
+
+if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+	loadCss();
+} else {
+	document.addEventListener("DOMContentLoaded", loadCss);
+}
 
 YSH.jQueryPromise.then(function () {
 	$(function () {
@@ -59,3 +75,4 @@ YSH.jQueryPromise.then(function () {
 
 export default YSH;
 export { YSH };
+console.log(YSH);

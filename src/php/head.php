@@ -20,6 +20,7 @@ frame-src 'self' https://apis.google.com https://accounts.google.com;
 form-action 'self';
 img-src 'self' data: https://www.google-analytics.com https://stats.g.doubleclick.net https://www.google.com https://www.google.com.hk;
 script-src
+moondanz.tanghin.edu.hk/~S151204/scripts/
 student.tanghin.edu.hk/~S151204/scripts/
 student.tanghin.edu.hk/~S151204/projects/NA-helper/NA
 https://cdnjs.cloudflare.com/ajax/libs/

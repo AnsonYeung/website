@@ -21,13 +21,28 @@ iframe {
 	}
 }
 </style>
+<script nonce="<?php echo $script_nonce ?>">
+const loadMc = function () {
+	const mc = document.getElementById("minecraft");
+	mc.src = "projects/processing.js/minecraft.html";
+	mc.addEventListener("load", function once () {
+		document.getElementById("minecraft").classList.remove("d-none");
+		mc.removeEventListener("load", once);
+	});
+};
+if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+	loadMc();
+} else {
+	document.addEventListener("DOMContentLoaded", loadMc);
+}
+</script>
 <?php include "../php/navbar.php" ?>
 <header class="border border-left-0 border-right-0 border-top-0 hscroll mb-3 mt-5 pb-2"><h1>Welcome to <span itemprop="name">Yeung Sin Hang</span>'s webpage!</h1></header>
 <article class="text-center" itemscope itemtype="http://schema.org/Game">
 	<h2><span itemprop="name">Minecraft</span> <small>(keyboard-only)</small></h2>
 	<div class="iframe-container text-center">
 		<link itemprop="gameLocation" href="http://student.tanghin.edu.hk/~S151204/projects/processing.js/minecraft.html" />
-		<iframe width="400" height="400" src="projects/processing.js/minecraft.html"></iframe>
+		<iframe width="400" height="400" id="minecraft" class="d-none"></iframe>
 	</div><br />
 	<p>This program was created by <a href="https://www.khanacademy.org/computer-programming/minecraft/1523326697">Bennimus</a>.</p>
 	<p><b>Please use <a href="https://www.google.com/chrome">Google Chrome</a> for the best experience.</b></p>

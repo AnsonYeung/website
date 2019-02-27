@@ -1,3 +1,4 @@
-FileETag MTime
-# Header set Cache-Control "max-age=604800, public, must-revalidate"
-Header set Cache-Control "max-age=0, no-cache"
+# FileETag MTime
+Header set Cache-Control "max-age=604800, public, must-revalidate"
+Header set Access-Control-Allow-Origin "http://student.tanghin.edu.hk"
+# Header set Cache-Control "max-age=1, no-cache"

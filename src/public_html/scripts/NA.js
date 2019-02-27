@@ -133,7 +133,10 @@ const factory = function (NA, $) {
 	};
 };
 
-YSH.jQueryPromise.then(factory.bind(null, NA, $));
+YSH.jQueryPromise.then(function () {
+	// the variable $ is only available from here
+	factory(NA, $);
+});
 
 export default NA;
 export { NA };

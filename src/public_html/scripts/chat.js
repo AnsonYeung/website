@@ -14,7 +14,7 @@ YSH.jQueryPromise.then(function () {
 		};
 		if (window.EventSource) {
 			const sessionId = document.cookie.split("PHPSESSID=")[1].split(";")[0];
-			$(new EventSource("//moondanz.tanghin.edu.hk/~S151204/projects/chat-room?type=EventSource&&PHPSESSID=" + sessionId)).on("userconnect", function (e) {
+			$(new EventSource("//moondanz.tanghin.edu.hk/~S151204/projects/chat-room?type=EventSource&PHPSESSID=" + sessionId)).on("userconnect", function (e) {
 				pushMessage("<i>" + getData(e).username + " entered the chat room.</i>");
 			}).on("usermessage", function (e) {
 				pushMessage(getData(e).username + ": " + getData(e).message);
@@ -23,7 +23,9 @@ YSH.jQueryPromise.then(function () {
 			}).on("updateUsers", function (e) {
 				$("#online").text("Online: " + getData(e));
 			}).on("error", function (e) {
-				throw new Error(e.originalEvent.data);
+				if (!window.closing) {
+					throw new Error(e.originalEvent.data);
+				}
 			}).on("requestClose", function (e) {
 				e.target.close();
 				pushMessage("<strong>Forced Quit:</strong>");
@@ -49,6 +51,7 @@ YSH.jQueryPromise.then(function () {
 		});
 		$("#send").click(handler);
 		$(window).on("unload", function () {
+			window.closing = true;
 			$.ajax({method: "POST", url: "chat-room?type=EventSource", data: {logout: true}, async: false});
 		});
 	});

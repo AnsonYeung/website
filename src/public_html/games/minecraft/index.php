@@ -21,13 +21,28 @@ iframe {
 }
 
 </style>
+<script nonce="<?php echo $script_nonce ?>">
+const loadMc = function () {
+	const mc = document.getElementById("minecraft");
+	mc.src = "../projects/processing.js/minecraft.html";
+	mc.addEventListener("load", function once () {
+		document.getElementById("minecraft").classList.remove("d-none");
+		mc.removeEventListener("load", once);
+	});
+};
+if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+	loadMc();
+} else {
+	document.addEventListener("DOMContentLoaded", loadMc);
+}
+</script>
 <?php include "../../../php/navbar.php" ?>
 <header class="border border-left-0 border-right-0 border-top-0 mb-3 mt-5 pb-2 hscroll"><h1>Minecraft</h1></header>
 <div class="row text-center">
 	<section class="col-12">
 		<h2>Game <small>(keyboard-only)</small></h2>
 		<div class="iframe-container">
-			<iframe width="400" height="400" src="../projects/processing.js/minecraft.html"></iframe>
+			<iframe width="400" height="400" id="minecraft" class="d-none"></iframe>
 		</div><br />
 		<p>This program was created by <a href="https://www.khanacademy.org/computer-programming/minecraft/1523326697">Bennimus</a>.</p>
 		<p><strong>Please use Google Chrome for the best experience.</strong></p>
