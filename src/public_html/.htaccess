@@ -5,7 +5,7 @@ ErrorDocument 404 /~S151204/_/404.php
 ErrorDocument 410 /~S151204/_/410.php
 ErrorDocument 503 /~S151204/_/503.php
 
-AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css text/javascript application/xml application/xhtml+xml application/rss+xml application/x-javascript
+AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css text/javascript application/xml application/xhtml+xml application/rss+xml application/x-javascript image/vnd.microsoft.icon
 
 # This configuations are actually for files/ and private/
 FileETag MTime

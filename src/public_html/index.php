@@ -23,17 +23,19 @@ iframe {
 </style>
 <script nonce="<?php echo $script_nonce ?>">
 const loadMc = function () {
-	const mc = document.getElementById("minecraft");
-	mc.src = "projects/processing.js/minecraft.html";
-	mc.addEventListener("load", function once () {
-		document.getElementById("minecraft").classList.remove("d-none");
-		mc.removeEventListener("load", once);
-	});
+	requestAnimationFrame(function () {
+		const mc = document.getElementById("minecraft");
+		mc.src = "projects/processing.js/minecraft.html";
+		mc.addEventListener("load", function once () {
+			document.getElementById("minecraft").classList.remove("d-none");
+			mc.removeEventListener("load", once);
+		});
+	});	
 };
-if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+if (document.readyState === "complete") {
 	loadMc();
 } else {
-	document.addEventListener("DOMContentLoaded", loadMc);
+	window.addEventListener("load", loadMc);
 }
 </script>
 <?php include "../php/navbar.php" ?>
