@@ -463,6 +463,12 @@ th {
 .table-hover tbody tr:hover {
 	background-color: rgba(0,0,0,.075);
 }
+.show>a {
+    outline: 0;
+}
+.dropdown-menu.show {
+    display: block;
+}
 .oi{
 	position:relative;
 	top:1px;
@@ -479,6 +485,15 @@ th {
 	text-align:center;
 	box-sizing:content-box
 }
+.oi-people:before{content:'\e0a4'}
+.oi-account-login:before{content:'\e000'}
+.oi-account-logout:before{content:'\e001'}
+.oi-arrow-left:before{content:'\e00d'}
+.oi-arrow-right:before{content:'\e00e'}
+.oi-arrow-top:before{content:'\e013'}
+.oi-pencil:before{content:'\e0a3'}
+.oi-chevron-left:before{content:'\e035'}
+.oi-chevron-right:before{content:'\e036'}
 .col, .col-1, .col-10, .col-11, .col-12,
 .col-2, .col-3, .col-4, .col-5, .col-6,
 .col-7, .col-8, .col-9, .col-auto, .col-lg,
