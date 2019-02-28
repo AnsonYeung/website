@@ -5,7 +5,7 @@ YSH.jsImport = function (args) {
 	for (const i in args) {
 		promises.push(import(args[i]));
 	}
-	return Promise.all(promises);
+	return Promise.race(promises);
 };
 
 YSH.jQueryPromise = YSH.jsImport(["https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/jquery.min.js"]);
