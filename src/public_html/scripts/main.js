@@ -1,17 +1,20 @@
-const YSH = {};
 
-YSH.jsImport = function (args) {
-	const promises = [];
-	for (const i in args) {
-		promises.push(import(args[i]));
-	}
-	return Promise.race(promises);
+/**
+ * Import one script from multiple urls
+ * @param {string[]} urls The list of urls for the same script
+ * @returns {Promise<void>}
+ */
+export function jsImport(urls) {
+	return urls.reduce((previous, current) => {
+		const p = import(current);
+		return previous.catch(() => p);
+	}, Promise.reject()).then(() => undefined);
 };
 
-YSH.jQueryPromise = YSH.jsImport(["https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/jquery.min.js"]);
+export const jQueryPromise = jsImport(["https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/jquery.min.js"]);
 
 Promise.all([
-	YSH.jQueryPromise,
+	jQueryPromise,
 	new Promise(resolve => {
 		if (typeof Popper === "undefined") {
 			document.getElementById("popper").addEventListener("load", resolve.bind(null));
@@ -20,7 +23,7 @@ Promise.all([
 		}
 	})
 ]).then(
-	YSH.jsImport(["https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/bootstrap.min.js"])
+	jsImport.bind(null, ["https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/bootstrap.min.js"])
 );
 
 const loadCss = function () {
@@ -35,7 +38,7 @@ if (document.attachEvent ? document.readyState === "complete" : document.readySt
 	document.addEventListener("DOMContentLoaded", loadCss);
 }
 
-YSH.jQueryPromise.then(function () {
+jQueryPromise.then(function () {
 	$(function () {
 		var ua = navigator.userAgent, msie = ua.indexOf("MSIE "), trident = ua.indexOf("Trident/");
 
@@ -48,7 +51,6 @@ YSH.jQueryPromise.then(function () {
 				"<div class=\"alert alert-warning alert-dismissable fade in\"><strong>WARNING:</strong> Detect use of IE" + (msie > 0 ? ua.substring(msie + 5, ua.indexOf(".", msie)) : "11") + "!Consider switching to a more modern browser such as, Edge, Chrome, FireFox so that we can offer better a user experience.<a class=\"close\" href=\"#\" aria-label=\"close\" data-dismiss=\"alert\">&times;</a></div>"
 			);
 		}
-
 
 		$("#activate-school").click(function () {
 			document.cookie = "school=true; path=/~S151204";
@@ -73,6 +75,9 @@ YSH.jQueryPromise.then(function () {
 	});
 });
 
+export const YSH = {
+	jQueryPromise,
+	jsImport
+};
+
 export default YSH;
-export { YSH };
-console.log(YSH);

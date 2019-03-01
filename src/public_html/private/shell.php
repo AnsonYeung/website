@@ -19,7 +19,7 @@ if (isset($_POST["command"])) {
 }
 include_once "/home/student/y2015/S151204/php/head.php";
 ?>
-<link rel="preload" as="font" href="https://fonts.gstatic.com/s/ubuntumono/v8/KFOjCneDtsqEr0keqCMhbCc3CsTKlA.woff2">
+<link rel="preload" as="font" href="https://fonts.gstatic.com/s/ubuntumono/v8/KFOjCneDtsqEr0keqCMhbCc6CsQ.woff2" crossorigin>
 <title>Command line - S151204"s workshop</title>
 <meta name="keywords" content="S151204's workshop, WebSocket, demo" />
 <meta name="description" content="WebSocket demo" />
@@ -39,11 +39,11 @@ b {color:white}
 
 #command {border:none;outline:none;background-color:black;color:rgba(255,255,255,0.5);width:100%}
 
-div.container-fluid {background-color:black;color:rgba(255, 255, 255, 0.5);font-size:2.43vw;font-family:"Ubuntu Mono",monospace}
+div.container-fluid {background-color:black;color:rgba(255, 255, 255, 0.5);font-display:swap;font-size:2.43vw;font-family:"Ubuntu Mono",monospace}
 </style>
 <script src="../scripts/shell.js" type="module" async></script>
 <?php include "/home/student/y2015/S151204/php/navbar.php" ?>
-<header class="page-header"><h1>Shell<small> - Make sure you know what you are doing before using commands</small></h1></header>
+<header class="border border-left-0 border-right-0 border-top-0 hscroll mb-3 mt-5 pb-2 text-center d-none d-md-block"><h1>Shell<small> - Make sure you know what you are doing before using commands</small></h1></header>
 <div class="jumbotron">
 	<h2>Server command line</h2>
 	<p>Some information:
