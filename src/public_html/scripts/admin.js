@@ -15,7 +15,7 @@ YSH.jQueryPromise.then(() => {
 	};
 	const submit = function () {
 		let users = [];
-		document.querySelectorAll("[value]").forEach((elem) => {
+		document.querySelectorAll("[value]:checked").forEach((elem) => {
 			users.push(elem.value);
 		});
 		if (users.length === 0) return;
