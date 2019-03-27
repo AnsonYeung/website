@@ -22,6 +22,8 @@ YSH.jQueryPromise.then(() => {
 		if (confirm("Are you sure to " + describe[this.id] + " " + users.join(", ") + "?")) {
 			$.post("admin/" + this.id, {users: JSON.stringify(users), page: userCurrentPage}, function (data) {
 				if (data === "Permission declined") {
+					// usually unreachable code
+					// this is intended for those who naively modify the dom
 					alert("Your permission currently don't allow you to do this.");
 					return;
 				}
