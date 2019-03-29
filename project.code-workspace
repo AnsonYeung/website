@@ -12,17 +12,29 @@
 	],
 	"settings": {
 		"git.autofetch": true,
-		"gitProjectManager.baseProjectsFolders": [
-			"G:\\My Drive\\Computer\\Git Forks",
-			"C:\\Users\\secur\\Website"
-		],
-		"php.validate.executablePath": "C:\\Programs\\php\\php.exe",
 		"php.validate.run": "onType",
 		"php.suggest.basic": false,
 		"editor.insertSpaces": false,
 		"editor.detectIndentation": false,
 		"files.eol": "\n",
-		"javascript.validate.enable": false
+		"javascript.validate.enable": false,
+		"auto-close-tag.activationOnLanguage":[
+			"xml",
+			"php",
+			"blade",
+			"ejs",
+			"jinja",
+			"javascriptreact",
+			"typescriptreact",
+			"plaintext",
+			"markdown",
+			"vue",
+			"liquid",
+			"erb",
+			"lang-cfml",
+			"cfml",
+			"HTML (Eex)"
+		]
 	},
 	"extensions": {
 		"recommendations": [
