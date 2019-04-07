@@ -27,6 +27,9 @@ window.ready = new Promise(resolve => {
 <style nonce="<?php echo $style_nonce?>">
 <?php include "../../style/bootstrap.inline.css" ?>/**/
 </style>
+<style nonce="<?php echo $style_nonce?>">
+<?php include "../../style/reversi.css" ?>/**/
+</style>
 <?php include "../../../php/navbar.php" ?>
 <header class="border border-left-0 border-right-0 border-top-0 mb-3 mt-5 pb-2 hscroll"><h1>Reversi</h1></header>
 <div id="base"></div>

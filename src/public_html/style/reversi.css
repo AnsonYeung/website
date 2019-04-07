@@ -1,12 +1,41 @@
+.board {
+	background-color: green;
+	width: 265px;
+}
+
+.board-row {
+	clear: both;
+	height: 33px;
+}
+
 .square {
-	border: 1px solid #999;
+	border: 1px solid #000;
 	font-size: 24px;
 	font-weight: bold;
-	line-height: 34px;
+	float: left;
+	line-height: 32px;
 	height: 34px;
 	margin-right: -1px;
 	margin-top: -1px;
 	padding: 0;
 	text-align: center;
 	width: 34px;
+	user-select: none;
+}
+
+.black {
+	color: black;
+}
+
+.white {
+	color: white;
+}
+
+.able {
+	cursor: pointer;
+	background-color: #00b300;
+}
+
+.able:hover {
+	background-color: greenyellow;
 }

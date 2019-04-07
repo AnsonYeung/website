@@ -1,14 +1,14 @@
 {
 	"folders": [
 		{
-			"path": "."
-		},
-		{
 			"path": "website-build"
 		},
 		{
 			"path": "src",
-		}
+		},
+		{
+			"path": "."
+		},
 	],
 	"settings": {
 		"git.autofetch": true,
@@ -49,7 +49,8 @@
 			"christian-kohler.path-intellisense",
 			"felixfbecker.php-intellisense",
 			"wayou.vscode-todo-highlight",
-			"vscode-icons-team.vscode-icons"
+			"vscode-icons-team.vscode-icons",
+			"coenraads.bracket-pair-colorizer-2"
 		]
 	}
 }
