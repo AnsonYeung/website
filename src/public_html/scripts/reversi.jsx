@@ -97,8 +97,21 @@ window.ready.then(function () {
 			this.setState({values, ables, black: !this.state.black});
 			this.props.onPlayer();
 			if (!oneAble) {
-				// trigger game endding
-				alert("Game over, currently in development.");
+				let bC = 0, wC = 0;
+				for (const val of values) {
+					if (val === 1) {
+						++bC;
+					} else if (val === 2) {
+						++wC;
+					}
+				}
+				const bWins = bC > wC;
+				if (wC > bC) {
+					let t = bC;
+					bC = wC;
+					wC = t;
+				}
+				this.props.onEnd(bWins, bC, wC);
 			}
 		}
 
@@ -129,15 +142,28 @@ window.ready.then(function () {
 		constructor(props) {
 			super(props);
 			this.state = {
-				black: true
+				black: true,
+				end: false
 			};
+		}
+
+		getInfo() {
+			if (this.state.end) {
+				if (this.state.gS === this.state.lS) {
+					return `Game ends as player ${this.state.black ? "black" : "white"} has no move. The game ends in a draw (${this.state.gS}:${this.state.lS})`;
+				} else {
+					return `Game ends as player ${this.state.black ? "black" : "white"} has no move. ${this.state.bWins ? "Black" : "White"} wins by ${this.state.gS}:${this.state.lS}`;
+				}
+			} else {
+				return "Player " + (2 - this.state.black)  + " (" + (this.state.black ? "Black" : "White") + "'s turn)";
+			}
 		}
 
 		render() {
 			return (
 				<div className="game">
-					<div className="player-info">{"Player " + (2 - this.state.black)  + " (" + (this.state.black ? "Black" : "White") + "'s turn)"}</div>
-					<Board size={8} onPlayer={() => {this.setState({black: !this.state.black})}}/>
+					<div className="player-info">{this.getInfo()}</div>
+					<Board size={8} onPlayer={() => {this.setState({black: !this.state.black})}} onEnd={(bWins, gS, lS) => {this.setState({bWins, gS, lS, end: true})}}/>
 				</div>
 			);
 		}

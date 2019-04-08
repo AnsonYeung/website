@@ -18,6 +18,11 @@
 		"editor.detectIndentation": false,
 		"files.eol": "\n",
 		"javascript.validate.enable": false,
+		"bracket-pair-colorizer-2.colors": [
+			"gold",
+			"greenyellow",
+			"dodgerblue"
+		],
 		"auto-close-tag.activationOnLanguage":[
 			"xml",
 			"php",
