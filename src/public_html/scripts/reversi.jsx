@@ -55,7 +55,7 @@ window.ready.then(function () {
 
 		emitEndEvent() {
 			let bC = 0, wC = 0;
-			for (const val of values) {
+			for (const val of this.state.values) {
 				if (val === 1) {
 					++bC;
 				} else if (val === 2) {
@@ -100,7 +100,7 @@ window.ready.then(function () {
 				ables = this.state.ables.slice(),
 				myValue = 2 - this.state.black,
 				numX = num % this.props.size,
-				numY = (num - numX) / this.props.size,
+				numY = (num - numX) / this.props.size;
 
 			values[num] = myValue;
 			for (const eat of this.getEatArray(numX, numY, false, values)) {
@@ -128,7 +128,7 @@ window.ready.then(function () {
 				const squares = [];
 				for (let j = 0; j < this.props.size; ++j) {
 					const magicNum = i * 8 + j;
-					squares.push(<Square key={magicNum} value={this.state.values[magicNum]} onClick={() => {this.handleClick(magicNum)}} able={this.state.ables[magicNum]}></Square>);
+					squares.push(<Square key={magicNum} value={this.state.values[magicNum]} onClick={this.handleClick.bind(this, magicNum)} able={this.state.ables[magicNum]}></Square>);
 				}
 				rows.push(<div className="board-row">{squares}</div>);
 			}
@@ -142,7 +142,8 @@ window.ready.then(function () {
 
 	Board.propTypes = {
 		size: PropTypes.number,
-		onPlayer: PropTypes.func
+		onPlayer: PropTypes.func,
+		onEnd: PropTypes.func
 	};
 
 	class Game extends React.Component {
@@ -170,7 +171,7 @@ window.ready.then(function () {
 			return (
 				<div className="game">
 					<div className="player-info">{this.getInfo()}</div>
-					<Board size={8} onPlayer={() => {this.setState({black: !this.state.black})}} onEnd={(bWins, gS, lS) => {this.setState({bWins, gS, lS, end: true})}}/>
+					<Board size={8} onPlayer={() => {this.setState({black: !this.state.black});}} onEnd={(bWins, gS, lS) => {this.setState({bWins, gS, lS, end: true});}}/>
 				</div>
 			);
 		}

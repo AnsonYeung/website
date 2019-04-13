@@ -1,0 +1,19 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "http://student.tanghin.edu.hk/~S151204",
+  "main": "website-build",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnsonYeung/website.git"
+  },
+  "author": "AnsonYeung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnsonYeung/website/issues"
+  },
+  "homepage": "https://github.com/AnsonYeung/website#readme"
+}
