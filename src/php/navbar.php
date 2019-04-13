@@ -14,6 +14,7 @@
                     <a class="dropdown-item" href="/~S151204/games/minecraft" role="menuitem">Minecraft</a>
                     <a class="dropdown-item" href="/~S151204/games/nibbles" role="menuitem">Nibbles (created by teacher)</a>
                     <a class="dropdown-item" href="/~S151204/games/platform-game" role="menuitem">Platform game</a>
+                    <a class="dropdown-item" href="/~S151204/games/reversi" role="menuitem">Reversi</a>
 				</div>
 			</div>
 			<div class="nav-item dropdown<?php if (substr($uri, 9, 9) === "/projects") echo " active" ?>">
@@ -33,6 +34,7 @@
 <?php if ($school):?>
 			<a class="nav-link active" href="#" id="school">SCHOOL MODE</a>
 <?php endif;?>
+			<a class="nav-link" href="https://github.com/AnsonYeung/website" target="_blank"><span class="oi oi-code"></span> Source</a>
 			<a class="nav-link<?php if (substr($uri, 9, 8) === "/private") echo " active" ?>" href="/~S151204/private">Admin area</a>
 <?php if (isset($username)): ?>
 			<a class="nav-link <?php if ($localuri === "/_/user" && isset($_GET["username"]) && $_GET["username"] === $username) echo " active" ?>" href="/~S151204/profile/<?php echo $username ?>"><span class="oi oi-people"></span> <?php echo $username ?></a>

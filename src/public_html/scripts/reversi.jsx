@@ -34,24 +34,6 @@ window.ready.then(function () {
 		}
 	}
 
-	function getEatArray(numX, numY, myV, enemyV, inRangeX, inRangeY, values) {
-		const eatArray = [];
-		for (const d of alld) {
-			let i = 0, posX = numX + d[0], posY = numY + d[1];
-			while (inRangeX(posX) && inRangeY(posY) && values[posX + posY * 8] === enemyV) {
-				++i;
-				posX += d[0];
-				posY += d[1];
-			}
-			if (inRangeX(posX) && inRangeY(posY) && values[posX + posY * 8] === myV) {
-				for (let j = 1; j <= i; ++j) {
-					eatArray.push(numX + numY * 8 + (d[0] + d[1] * 8) * j);
-				}
-			}
-		}
-		return eatArray;
-	}
-
 	class Board extends React.Component {
 		constructor(props) {
 			super(props);
@@ -89,6 +71,28 @@ window.ready.then(function () {
 			this.props.onEnd(bWins, bC, wC);
 		}
 
+		getEatArray(numX, numY, flipCurrent, values) {
+			const
+				b = flipCurrent ^ this.state.black,
+				myV = 2 - b,
+				enemyV = 1 + b,
+				eatArray = [];
+			for (const d of alld) {
+				let i = 0, posX = numX + d[0], posY = numY + d[1];
+				while (this.inRange(posX) && this.inRange(posY) && values[posX + posY * 8] === enemyV) {
+					++i;
+					posX += d[0];
+					posY += d[1];
+				}
+				if (this.inRange(posX) && this.inRange(posY) && values[posX + posY * 8] === myV) {
+					for (let j = 1; j <= i; ++j) {
+						eatArray.push(numX + numY * 8 + (d[0] + d[1] * 8) * j);
+					}
+				}
+			}
+			return eatArray;
+		}
+
 		handleClick(num) {
 			if (this.state.values[num] !== 0 || !this.state.ables[num]) return;
 			const
@@ -101,14 +105,14 @@ window.ready.then(function () {
 				inRange = this.inRange.bind(this);
 
 			values[num] = myValue;
-			for (const eat of getEatArray(numX, numY, myValue, enemyValue, inRange, inRange, values)) {
+			for (const eat of this.getEatArray(numX, numY, false, values)) {
 				values[eat] = myValue;
 			}
 
 			let oneAble = false;
 			for (let i = 0; i < this.props.size; ++i) {
 				for (let j = 0; j < this.props.size; ++j) {
-					if (ables[i + j * 8] = values[i + j * 8] === 0 && getEatArray(i, j, enemyValue, myValue, inRange, inRange, values).length !== 0) {
+					if (ables[i + j * 8] = values[i + j * 8] === 0 && this.getEatArray(i, j, true, values).length !== 0) {
 						oneAble = true;
 					}
 				}
