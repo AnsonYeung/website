@@ -14,7 +14,7 @@ YSH.jQueryPromise.then(function ($) {
 	});
 });
 
-const init = function (gapi) {
+loadGapi(function (gapi) {
 	gapi.load("auth2", function (auth2) {
 		auth2 = gapi.auth2.init({
 			client_id: "1093588347904-bnd4hlks49ahnqelh7fedg8oqor9n51q.apps.googleusercontent.com",
@@ -49,6 +49,4 @@ const init = function (gapi) {
 			});
 		});
 	});
-};
-
-loadGapi(init);
+});
