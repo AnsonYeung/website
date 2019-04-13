@@ -99,10 +99,8 @@ window.ready.then(function () {
 				values = this.state.values.slice(),
 				ables = this.state.ables.slice(),
 				myValue = 2 - this.state.black,
-				enemyValue = 1 + this.state.black,
 				numX = num % this.props.size,
 				numY = (num - numX) / this.props.size,
-				inRange = this.inRange.bind(this);
 
 			values[num] = myValue;
 			for (const eat of this.getEatArray(numX, numY, false, values)) {
