@@ -8,10 +8,34 @@ export function jsImport(urls) {
 	return urls.reduce((previous, current) => {
 		const p = import(current);
 		return previous.catch(() => p);
-	}, Promise.reject()).then(() => undefined);
-};
+	}, Promise.reject()).then(() => null);
+}
 
-export const jQueryPromise = jsImport(["https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/jquery.min.js"]);
+export function loadGapi(onLoad) {
+	if (window.gapi) {
+		onLoad(window.gapi);
+	} else {
+		const g = document.getElementById("gapi");
+		g.addEventListener("load", function onScriptLoad() {
+			g.removeEventListener("load", onScriptLoad);
+			onLoad(window.gapi);
+		});
+	}
+}
+
+export function finishLogin() {
+	sessionStorage.loggedIn = true;
+	if (sessionStorage.continue) {
+		const c = sessionStorage.continue;
+		sessionStorage.removeItem("continue");
+		location.href = c;
+	} else {
+		location.href = "/~S151204/";
+	}
+}
+
+export const jQueryPromise = jsImport(["https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js", "//moondanz.tanghin.edu.hk/~S151204/scripts/jquery.min.js"])
+	.then(() => window.jQuery);
 
 Promise.all([
 	jQueryPromise,
@@ -38,7 +62,7 @@ if (document.attachEvent ? document.readyState === "complete" : document.readySt
 	document.addEventListener("DOMContentLoaded", loadCss);
 }
 
-jQueryPromise.then(function () {
+jQueryPromise.then(function ($) {
 	$(function () {
 		var ua = navigator.userAgent, msie = ua.indexOf("MSIE "), trident = ua.indexOf("Trident/");
 

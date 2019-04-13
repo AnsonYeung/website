@@ -1,0 +1,11 @@
+#wait, #warning, #output {
+	display: none;
+}
+
+#warning {
+	font-size: 3em;
+}
+
+#word-list {
+	resize: vertical;
+}

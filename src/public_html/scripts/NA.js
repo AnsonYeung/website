@@ -2,7 +2,9 @@ import { YSH } from "./main.js";
 
 // Model
 const NA = {};
-const factory = function (NA, $) {
+
+YSH.jQueryPromise.then(function ($) {
+
 	// View
 	NA.reset = function () {
 		$("#warning").slideUp("fast").empty();
@@ -52,6 +54,7 @@ const factory = function (NA, $) {
 		}
 		return wordList;
 	};
+
 	NA.wordListValid = function () {
 		const wordList = NA.getWordList().sort();
 		if (wordList.length === 0) {
@@ -66,6 +69,66 @@ const factory = function (NA, $) {
 		}
 		return true;
 	};
+
+	function parsePageData(data, v) {
+		const wDoc = $.parseHTML(data);
+		if (!$(".entry-body", wDoc)[0]) {
+			NA.displayError("There is no such word, " + v + "!");
+			return false;
+		}
+		// test all example and use the shortest one
+		let out_eg, out_eg_len;
+		const sentenceRegex = /^[A-Z].*\.$/;
+		$(".eg:not(.extraexamps .eg)", wDoc).each(function(i, e) {
+			const eg = $(e).text();
+			const eg_len = eg.length + $(e).parent(".def-block").find(".def").text().length;
+			out_eg = out_eg ? out_eg : $(e);
+			out_eg_len = out_eg_len ? out_eg_len : eg_len;
+			out_eg = eg_len < out_eg_len && sentenceRegex.test(eg) ? $(e) : out_eg;
+		});
+		if (!out_eg) {
+			NA.displayError("Sorry, there is no example sentences with the word, " + v + ", on the dictionary.");
+			return false;
+		}
+		return out_eg;
+	}
+
+	function getOutputs(out_eg) {
+		const entry = out_eg.parents(".entry-body__el");
+		const out = [];
+		out[0] = entry.find(".headword").text();
+		out[1] = entry.find(".ico-bg").text();
+		out[2] = entry.find(".ipa:first").text();
+		out[3] = out_eg.parents(".def-block").find(".def").text();
+		out[4] = out_eg.text();
+		return out;
+	}
+
+	function processWord(output, i, v, onFinish) {
+		let normal = true;
+		$.each(NA.assets, function (index, value) {
+			if (index.toUpperCase() === v.toUpperCase()) {
+				value.unshift(index);
+				output[i] = value;
+				normal = false;
+				onFinish();
+			}
+		});
+		if (normal) {
+			$.get("../browse", {url:"http://dictionary.cambridge.org/search/english/direct/?source=gadgets&q=" + v},
+				function(data) {
+					const d = parsePageData(data, v);
+					if (d) {
+						output[i] = getOutputs(d);
+						onFinish(true);
+					}
+				}
+			).fail(function () {
+				NA.displayError("Failed to communicate with server.");
+			});
+		}
+	}
+
 	NA.process = function () {
 		if (!NA.wordListValid()) {
 			return;
@@ -74,68 +137,16 @@ const factory = function (NA, $) {
 		let doneCount = 0;
 		let output = [];
 		$.each(words, function (i, v) {
-			const normal = true;
-			$.each(NA.assets, function(index, value) {
-				if (index.toUpperCase() === v.toUpperCase()) {
-					value.unshift(index);
-					output[i] = value;
-					doneCount++;
-					normal = false;
-					return;
+			processWord(output, i, v, (noisy) => {
+				if (words.length === ++doneCount) {
+					NA.output(output);
+				} else if (noisy) {
+					NA.displayStatus("Getting words (" + doneCount + " out of " + words.length + ")");
 				}
 			});
-			if (normal) {
-				$.get("../browse", {url:"http://dictionary.cambridge.org/search/english/direct/?source=gadgets&q=" + v},
-					(function(i, v, output) {
-						return function(data) {
-							const wDoc = $.parseHTML(data);
-							if (!$(".entry-body", wDoc)[0]) {
-								NA.displayError("There is no such word, " + v + "!");
-								return;
-							}
-							// test all example and use the shortest one
-							let out_eg, out_eg_len;
-							const sentenceRegex = /^[A-Z].*\.$/;
-							$(".eg:not(.extraexamps .eg)", wDoc).each(function(i, e) {
-								var eg = $(e).text();
-								var eg_len = eg.length + $(e).parent(".def-block").find(".def").text().length;
-								out_eg = out_eg ? out_eg : $(e);
-								out_eg_len = out_eg_len ? out_eg_len : eg_len;
-								out_eg = eg_len < out_eg_len && sentenceRegex.test(eg) ? $(e) : out_eg;
-							});
-							if (!out_eg) {
-								NA.displayError("Sorry, there is no example sentences with the word, " + v + ", on the dictionary.");
-								return;
-							}
-							const entry = out_eg.parents(".entry-body__el");
-							let out = [];
-							out[0] = entry.find(".headword").text();
-							out[1] = entry.find(".ico-bg").text();
-							out[2] = entry.find(".ipa:first").text();
-							out[3] = out_eg.parents(".def-block").find(".def").text();
-							out[4] = out_eg.text();
-							output[i] = out;
-							if (words.length === ++doneCount) {
-								NA.output(output);
-							}
-							NA.displayStatus("Getting words (" + doneCount + " out of " + words.length + ")");
-						};
-					})(i, v, output)
-				).fail(function () {
-					NA.displayError("Failed to communicate with server.");
-				});
-			}
 		});
 		NA.displayStatus("Request all sent");
-		if (words.length === doneCount) {
-			NA.output(output);
-		}
 	};
-};
-
-YSH.jQueryPromise.then(function () {
-	// the variable $ is only available from here
-	factory(NA, $);
 });
 
 export default NA;

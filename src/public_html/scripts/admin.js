@@ -2,7 +2,7 @@ import YSH from "./main.js";
 
 // Fetch users, pages, etc, here.
 // 1. preload next page content
-YSH.jQueryPromise.then(() => {
+YSH.jQueryPromise.then(($) => {
 	let userCurrentPage = 0;
 	let userPages = [document.getElementById("user").innerHTML];
 	/**
@@ -36,22 +36,23 @@ YSH.jQueryPromise.then(() => {
 		}
 	};
 	$("#user").on("click", ":checkbox[value]:enabled", function () {
+		const thisPerm = $(this).parent().next().next().next().text();
 		if (!this.checked) {
 			$("#sa").prop("checked", false);
-			if ($(this).parent().next().next().next().text() === "none") {
+			if (thisPerm === "none") {
 				$("#down").prop("disabled", $("tr:has(:checkbox[value]:checked)>td:nth-child(4):contains('none')").length !==  0);
 			}
-			if ($(this).parent().next().next().next().text() === "admin") {
+			if (thisPerm === "admin") {
 				$("#up").prop("disabled", $("tr:has(:checkbox[value]:checked)>td:nth-child(4):contains('admin')").length !==  0);
 			}
 		} else {
 			if ($(":checkbox[value]:enabled:not(:checked)").length === 0) {
 				$("#sa").prop("checked", true);
 			}
-			if ($(this).parent().next().next().next().text() === "none") {
+			if (thisPerm === "none") {
 				$("#down").prop("disabled", true);
 			}
-			if ($(this).parent().next().next().next().text() === "admin") {
+			if (thisPerm === "admin") {
 				$("#up").prop("disabled", true);
 			}
 		}
@@ -70,17 +71,13 @@ YSH.jQueryPromise.then(() => {
 	$("#del:enabled").click(submit);
 	if (window.EventSource) {
 		const sessionId = document.cookie.split("PHPSESSID=")[1].split(";")[0];
-		$(new EventSource("//moondanz.tanghin.edu.hk/~S151204/admin?EventSource=access&rows=" + $("#access").children().length +
-				"&PHPSESSID=" + sessionId)).on("update", function (e) {
-			$("#access").html(e.originalEvent.data);
-		});
-		$(new EventSource("//moondanz.tanghin.edu.hk/~S151204/admin?EventSource=error&rows=" + $("#error").children().length +
-				"&PHPSESSID=" + sessionId)).on("update", function (e) {
-			$("#error").html(e.originalEvent.data);
-		});
-		$(new EventSource("//moondanz.tanghin.edu.hk/~S151204/admin?EventSource=slog&rows=" + $("#slog").children().length * 2 +
-				"&PHPSESSID=" + sessionId)).on("update", function (e) {
-			$("#slog").html(e.originalEvent.data);
+		["access", "error", "slog"].forEach(v => {
+			const elem = $(`#${v}`);
+			const rows = elem.children().length;
+			$(new EventSource(`//moondanz.tanghin.edu.hk/~S151204/admin?EventSource=${v}&rows=${rows}&PHPSESSID=${sessionId}`))
+				.on("update", function (e) {
+					elem.html(e.originalEvent.data);
+				});
 		});
 	} else {
 		$(".alerts").append("<div class=\"alert alert-danger\">You are using Internet Exporer or Microsoft Edge which is not supported by Access Log and Error Log feature right now. See <a href=\"//caniuse.com/#feat=eventsource\" target=\"_blank\">browser support</a> for this feature also.<a class=\"close\" href=\"#\" aria-label=\"close\" data-dismiss=\"alert\">&times;</a></div>");

@@ -10,7 +10,8 @@ $csp = str_replace("\n", " ", <<<HEADER
 base-uri 'self';
 connect-src ws://student.tanghin.edu.hk/~S151204/
 http://student.tanghin.edu.hk/~S151204/
-http://moondanz.tanghin.edu.hk/~S151204/;
+http://moondanz.tanghin.edu.hk/~S151204/
+https://www.google-analytics.com/;
 default-src 'self' https://*.google.com;
 font-src 'self'
 https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/fonts/
@@ -18,7 +19,7 @@ https://fonts.gstatic.com
 data:;
 frame-src 'self' https://apis.google.com https://accounts.google.com;
 form-action 'self';
-img-src 'self' data: https://www.google-analytics.com https://stats.g.doubleclick.net https://www.google.com https://www.google.com.hk;
+img-src 'self' data: https://www.google-analytics.com https://stats.g.doubleclick.net https://www.google.com https://www.google.com.hk https://www.gstatic.com/;
 script-src
 moondanz.tanghin.edu.hk/~S151204/scripts/
 student.tanghin.edu.hk/~S151204/scripts/

@@ -43,77 +43,90 @@ if (isset($_GET["EventSource"])) {
 	$priv >= 1 or ban();
 	switch ($_GET["EventSource"]) {
 	case "access":
-		header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		ob_implicit_flush();
-		$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
-		$sep = "</td><td>";
-		echo "retry: 100", PHP_EOL;
-		while (connection_status() === CONNECTION_NORMAL) {
-			clearstatcache();
-			if ($mtime !== filemtime("/var/www/logs/access_log")) {
-				$mtime = filemtime("/var/www/logs/access_log");
-				echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
-				$arr = explode(PHP_EOL, tail_custom("/var/www/logs/access_log", isset($_GET['rows']) ? 2 * (int)$_GET['rows'] : 40));
-				for ($i = count($arr) - 1; $i >= 0; $i -= 2) {
-					echo "data: <tr><td>", strtok($arr[$i], " "), $sep, strtok(" "), $sep, strtok(" "), $sep, substr(strtok("]"), 1), $sep; strtok("\"");
-					echo strtok("\""), $sep, strtok(" "), $sep, strtok(" "), $sep, strtok("\""), $sep; strtok("\"");
-					echo strtok("\""), "</td></tr>", PHP_EOL;
-				}
-				echo PHP_EOL;
-				ob_flush();
-			}
-			usleep(100000);
-		}
+		sse_access();
 		break;
 	case "error":
-		header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		ob_implicit_flush();
-		$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
-		echo "retry: 100", PHP_EOL;
-		while (connection_status() === CONNECTION_NORMAL) {
-			clearstatcache();
-			if ($mtime !== filemtime("/var/www/logs/error_log")) {
-				$mtime = filemtime("/var/www/logs/error_log");
-				echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
-				$arr = explode(PHP_EOL, tail_custom("/var/www/logs/error_log", isset($_GET['rows']) ? (int)$_GET['rows'] : 20));
-				for ($i = count($arr) - 1; $i >= 0; $i--) {
-					echo "data: <tr><td>", $arr[$i], "</td></tr>", PHP_EOL;
-				}
-				echo PHP_EOL;
-				ob_flush();
-			}
-			usleep(100000);
-		}
+		sse_error();
 		break;
 	case "slog":
-		header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		ob_implicit_flush();
-		$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
-		echo "retry: 100", PHP_EOL;
-		while (connection_status() === CONNECTION_NORMAL) {
-			clearstatcache();
-			if ($mtime !== filemtime("databases/server.log")) {
-				$mtime = filemtime("databases/server.log");
-				echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
-				$arr = explode(PHP_EOL.PHP_EOL, tail_custom("databases/server.log", isset($_GET['rows']) ? (int)$_GET['rows'] : 20));
-				for ($i = count($arr) - 1; $i >= 0; $i--) {
-					echo "data: <tr><td>", $arr[$i], "</td></tr>", PHP_EOL;
-				}
-				echo PHP_EOL;
-				ob_flush();
-			}
-			usleep(100000);
-		}
+		sse_slog();
 		break;
 	}
 	ban();
 }
+
+function sse_access() {
+	header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
+	header("Content-Type: text/event-stream");
+	header("Cache-Control: no-cache");
+	ob_implicit_flush();
+	$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
+	$sep = "</td><td>";
+	echo "retry: 100", PHP_EOL;
+	while (connection_status() === CONNECTION_NORMAL) {
+		clearstatcache();
+		if ($mtime !== filemtime("/var/www/logs/access_log")) {
+			$mtime = filemtime("/var/www/logs/access_log");
+			echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
+			$arr = explode(PHP_EOL, tail_custom("/var/www/logs/access_log", isset($_GET['rows']) ? 2 * (int)$_GET['rows'] : 40));
+			for ($i = count($arr) - 1; $i >= 0; $i -= 2) {
+				echo "data: <tr><td>", strtok($arr[$i], " "), $sep, strtok(" "), $sep, strtok(" "), $sep, substr(strtok("]"), 1), $sep; strtok("\"");
+				echo strtok("\""), $sep, strtok(" "), $sep, strtok(" "), $sep, strtok("\""), $sep; strtok("\"");
+				echo strtok("\""), "</td></tr>", PHP_EOL;
+			}
+			echo PHP_EOL;
+			ob_flush();
+		}
+		usleep(100000);
+	}
+}
+
+function sse_error() {
+	header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
+	header("Content-Type: text/event-stream");
+	header("Cache-Control: no-cache");
+	ob_implicit_flush();
+	$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
+	echo "retry: 100", PHP_EOL;
+	while (connection_status() === CONNECTION_NORMAL) {
+		clearstatcache();
+		if ($mtime !== filemtime("/var/www/logs/error_log")) {
+			$mtime = filemtime("/var/www/logs/error_log");
+			echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
+			$arr = explode(PHP_EOL, tail_custom("/var/www/logs/error_log", isset($_GET['rows']) ? (int)$_GET['rows'] : 20));
+			for ($i = count($arr) - 1; $i >= 0; $i--) {
+				echo "data: <tr><td>", $arr[$i], "</td></tr>", PHP_EOL;
+			}
+			echo PHP_EOL;
+			ob_flush();
+		}
+		usleep(100000);
+	}
+}
+
+function sse_slog() {
+	header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
+	header("Content-Type: text/event-stream");
+	header("Cache-Control: no-cache");
+	ob_implicit_flush();
+	$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
+	echo "retry: 100", PHP_EOL;
+	while (connection_status() === CONNECTION_NORMAL) {
+		clearstatcache();
+		if ($mtime !== filemtime("databases/server.log")) {
+			$mtime = filemtime("databases/server.log");
+			echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
+			$arr = explode(PHP_EOL.PHP_EOL, tail_custom("databases/server.log", isset($_GET['rows']) ? 2 * (int)$_GET['rows'] : 40));
+			for ($i = count($arr) - 1; $i >= 0; $i--) {
+				echo "data: <tr><td>", $arr[$i], "</td></tr>", PHP_EOL;
+			}
+			echo PHP_EOL;
+			ob_flush();
+		}
+		usleep(100000);
+	}
+}
+
 include "../php/head.php";
 $user_profile = getorban($accounts, $user_id);
 $priv = $user_profile["privilegeLevel"];

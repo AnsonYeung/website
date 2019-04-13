@@ -1,20 +1,13 @@
-import YSH from "./main.js";
+import YSH, { finishLogin } from "./main.js";
 
-YSH.jQueryPromise.then(function () {
+YSH.jQueryPromise.then(function ($) {
 	$("output").toggleClass("hide").hide();
 	$("form").submit(function (e) {
 		e.preventDefault();
 		sessionStorage.username = $("#username").val();
 		$.post("user/create", $(e.target).serialize() + "&noredir=true", function (data, status, xhr) {
 			if (data === "Account created successfully.") {
-				sessionStorage.loggedIn = true;
-				if (sessionStorage.continue) {
-					var c = sessionStorage.continue;
-					sessionStorage.removeItem("continue");
-					location.href = c;
-				} else {
-					location.href = "/~S151204/";
-				}
+				finishLogin();
 			} else {
 				if (data !== "") {
 					$("output").text(data).slideDown().delay(1000).slideUp();
