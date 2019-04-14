@@ -88,15 +88,23 @@ function formatJSON_object($obj, $indent, $level) {
  */
 
 function formatJSON($obj,  $indent = 4, $level = 0) {
-	$indent_unit = str_repeat(" ", $indent);
-	$cindent = str_repeat($indent_unit, $level);
-	if (is_array($obj) && array_keys($obj) === range(0, count($obj) - 1)) {
-		return formatJSON_array($obj, $indent, $level);
-	} else if (is_array($obj)) {
-		return formatJSON_object($obj, $indent, $level);
-	} else {
+	if (!is_array($obj)) {
 		return json_encode($obj);
+	} else if (array_keys($obj) === range(0, count($obj) - 1)) {
+		return formatJSON_array($obj, $indent, $level);
+	} else {
+		return formatJSON_object($obj, $indent, $level);
 	}
+}
+
+function backtrace_args_to_string($args) {
+	$str = "(";
+	for ($i = 0; $i < count($args); ++$i) {
+		if ($i !== 0) $str .= ", ";
+		$str .= formatJSON($args[$i], 4, 1);
+	}
+	$str .= ")";
+	return $str;
 }
 
 function backtrace_item_to_string($item) {
@@ -104,19 +112,8 @@ function backtrace_item_to_string($item) {
 	isset($item["class"]) and $str .= $item["class"];
 	isset($item["type"]) and $str .= $item["type"];
 	isset($item["function"]) and $str .= $item["function"];
-	if (isset($item["args"]) && $item["function"] != "err_handler") {
-		$str .= "(";
-		for ($j = 0; $j < count($item["args"]); $j++) {
-			if ($j != 0) $str .= ", ";
-			$str .= formatJSON($item["args"][$j], 4, 1);
-		}
-		$str .= ")";
-	}
-	if (isset($item["file"])) {
-		$str .= " (" . $item["file"];
-		isset($item["line"]) and $str .= ":" . $item["line"];
-		$str .= ")";
-	}
+	(isset($item["args"]) && $item["function"] != "err_handler") and $str .= backtrace_args_to_string($item["args"]);
+	isset($item["file"]) and $str .= " (" . $item["file"] . (isset($item["line"]) ? $str .= ":" . $item["line"] : "") . ")";
 	isset($item["object"]) and $str .= PHP_EOL . formatJSON($item["object"], 4, 1);
 	$str .= PHP_EOL;
 	return $str;
