@@ -266,6 +266,23 @@ function tail_custom($filepath, $lines = 1, $adaptive = true) {
 	return trim($output);
 }
 
+/**
+ * Print a row of user info on `/admin`
+ * 
+ * @author Yeung Sin Hang <s151204@tanghin.edu.hk>
+ * @param array[string] $data the account array
+ * @param boolean $perm whether the checkbox should be disabled because of permission
+ * @param boolean $you whether a small word `you` should be added
+ */
+function echo_admin_r($data, $perm, $you) {
+	static $priv_text = array("none", "elevated", "admin", "root");
+	$priv = $data["privilegeLevel"];
+	echo "<tr", $data["isDeleted"] ? " class='danger'" : "", "><td><input type='checkbox' value='", $data["name"], "'",
+		($perm or $data["isDeleted"]) ? " disabled" : "", " /></td><td>",
+		$data["name"], $you ? "<small class='text-primary'>(you)</small>" : "", "</td><td>",
+		$data["score"], "</td><td>",
+		$priv_text[$priv], "</td></tr>", PHP_EOL;
+}
 
 /**
  * class Database

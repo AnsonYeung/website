@@ -18,7 +18,6 @@ if (isset($_GET["page"])) {
 	$user_profile = getorban($accounts, $user_id);
 	$priv = $user_profile["privilegeLevel"];
 	$priv >= 1 or ban();
-	$priv_text = array("none", "elevated", "admin", "root");
 	$user_count = 0;
 	foreach ($accounts as $id => $data) {
 		if ($user_count === $_GET["page"] * 10 + 10) {
@@ -26,11 +25,7 @@ if (isset($_GET["page"])) {
 		}
 		$targetpriv = $data["privilegeLevel"];
 		if ($user_count >= $_GET["page"] * 10) {
-			echo "<tr", $data["isDeleted"] ? " class='danger'" : "", "><td><input type='checkbox' value='", $data["name"], "'",
-				($priv <= $targetpriv or $data["isDeleted"]) ? " disabled" : "", " /></td><td>",
-				$data["name"], $data["name"] === $username ? "<small class='text-primary'>(you)</small>" : "", "</td><td>",
-				$data["score"], "</td><td>",
-				$priv_text[$targetpriv], "</td></tr>", PHP_EOL;
+			echo_admin_r($data, $priv <= $targetpriv, $data["name"] === $username);
 		}
 		$user_count++;
 	}
@@ -41,90 +36,74 @@ if (isset($_GET["EventSource"])) {
 	$user_profile = getorban($accounts, $user_id);
 	$priv = $user_profile["privilegeLevel"];
 	$priv >= 1 or ban();
-	switch ($_GET["EventSource"]) {
-	case "access":
-		sse_access();
-		break;
-	case "error":
-		sse_error();
-		break;
-	case "slog":
-		sse_slog();
-		break;
-	}
-	ban();
-}
-
-function sse_access() {
-	header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
-	header("Content-Type: text/event-stream");
-	header("Cache-Control: no-cache");
-	ob_implicit_flush();
+	in_array($_GET["EventSource"], array("access", "error", "slog")) or ban();
+	init_sse();
 	$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
-	$sep = "</td><td>";
 	echo "retry: 100", PHP_EOL;
 	while (connection_status() === CONNECTION_NORMAL) {
 		clearstatcache();
-		if ($mtime !== filemtime("/var/www/logs/access_log")) {
-			$mtime = filemtime("/var/www/logs/access_log");
-			echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
-			$arr = explode(PHP_EOL, tail_custom("/var/www/logs/access_log", isset($_GET['rows']) ? 2 * (int)$_GET['rows'] : 40));
-			for ($i = count($arr) - 1; $i >= 0; $i -= 2) {
-				echo "data: <tr><td>", strtok($arr[$i], " "), $sep, strtok(" "), $sep, strtok(" "), $sep, substr(strtok("]"), 1), $sep; strtok("\"");
-				echo strtok("\""), $sep, strtok(" "), $sep, strtok(" "), $sep, strtok("\""), $sep; strtok("\"");
-				echo strtok("\""), "</td></tr>", PHP_EOL;
-			}
-			echo PHP_EOL;
-			ob_flush();
+		switch ($_GET["EventSource"]) {
+		case "access":
+			$mtime = sse_access($mtime);
+			break;
+		case "error":
+			$mtime = sse_error($mtime);
+			break;
+		case "slog":
+			$mtime = sse_slog($mtime);
+			break;
 		}
 		usleep(100000);
 	}
 }
 
-function sse_error() {
+function init_sse() {
 	header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
 	header("Content-Type: text/event-stream");
 	header("Cache-Control: no-cache");
 	ob_implicit_flush();
-	$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
-	echo "retry: 100", PHP_EOL;
-	while (connection_status() === CONNECTION_NORMAL) {
-		clearstatcache();
-		if ($mtime !== filemtime("/var/www/logs/error_log")) {
-			$mtime = filemtime("/var/www/logs/error_log");
-			echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
-			$arr = explode(PHP_EOL, tail_custom("/var/www/logs/error_log", isset($_GET['rows']) ? (int)$_GET['rows'] : 20));
-			for ($i = count($arr) - 1; $i >= 0; $i--) {
-				echo "data: <tr><td>", $arr[$i], "</td></tr>", PHP_EOL;
-			}
-			echo PHP_EOL;
-			ob_flush();
-		}
-		usleep(100000);
-	}
 }
 
-function sse_slog() {
-	header("Access-Control-Allow-Origin: http://student.tanghin.edu.hk");
-	header("Content-Type: text/event-stream");
-	header("Cache-Control: no-cache");
-	ob_implicit_flush();
-	$mtime = isset($_SERVER["HTTP_LAST_EVENT_ID"]) ? $_SERVER["HTTP_LAST_EVENT_ID"] : 0;
-	echo "retry: 100", PHP_EOL;
-	while (connection_status() === CONNECTION_NORMAL) {
-		clearstatcache();
-		if ($mtime !== filemtime("databases/server.log")) {
-			$mtime = filemtime("databases/server.log");
-			echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
-			$arr = explode(PHP_EOL.PHP_EOL, tail_custom("databases/server.log", isset($_GET['rows']) ? 2 * (int)$_GET['rows'] : 40));
-			for ($i = count($arr) - 1; $i >= 0; $i--) {
-				echo "data: <tr><td>", $arr[$i], "</td></tr>", PHP_EOL;
-			}
-			echo PHP_EOL;
-			ob_flush();
+function sse_access($mtime) {
+	static $sep = "</td><td>";
+	if ($mtime !== filemtime("/var/www/logs/access_log")) {
+		echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
+		$arr = explode(PHP_EOL, tail_custom("/var/www/logs/access_log", isset($_GET['rows']) ? 2 * (int)$_GET['rows'] : 40));
+		for ($i = count($arr) - 1; $i >= 0; $i -= 2) {
+			echo "data: <tr><td>", strtok($arr[$i], " "), $sep, strtok(" "), $sep, strtok(" "), $sep, substr(strtok("]"), 1), $sep; strtok("\"");
+			echo strtok("\""), $sep, strtok(" "), $sep, strtok(" "), $sep, strtok("\""), $sep; strtok("\"");
+			echo strtok("\""), "</td></tr>", PHP_EOL;
 		}
-		usleep(100000);
+		echo PHP_EOL;
+		ob_flush();
 	}
+	return filemtime("/var/www/logs/access_log");
+}
+
+function sse_error($mtime) {
+	if ($mtime !== filemtime("/var/www/logs/error_log")) {
+		echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
+		$arr = explode(PHP_EOL, tail_custom("/var/www/logs/error_log", isset($_GET['rows']) ? (int)$_GET['rows'] : 20));
+		for ($i = count($arr) - 1; $i >= 0; $i--) {
+			echo "data: <tr><td>", $arr[$i], "</td></tr>", PHP_EOL;
+		}
+		echo PHP_EOL;
+		ob_flush();
+	}
+	return filemtime("/var/www/logs/error_log");
+}
+
+function sse_slog($mtime) {
+	if ($mtime !== filemtime("databases/server.log")) {
+		echo "id: ", $mtime, PHP_EOL, "event: update", PHP_EOL;
+		$arr = explode(PHP_EOL.PHP_EOL, tail_custom("databases/server.log", isset($_GET['rows']) ? 2 * (int)$_GET['rows'] : 40));
+		for ($i = count($arr) - 1; $i >= 0; $i--) {
+			echo "data: <tr><td>", $arr[$i], "</td></tr>", PHP_EOL;
+		}
+		echo PHP_EOL;
+		ob_flush();
+	}
+	return filemtime("databases/server.log");
 }
 
 include "../php/head.php";

@@ -45,18 +45,13 @@ case "del":
 }
 $db->unlock($accounts);
 $user_count = 0;
-$priv_text = array("none", "elevated", "admin", "root");
 foreach ($accounts as $id => $data) {
 	if ($user_count === $page * 10 + 10) {
 		die();
 	}
 	$targetpriv = $data["privilegeLevel"];
 	if ($user_count >= $page * 10) {
-		echo "<tr", $data["isDeleted"] ? " class='danger'" : "", "><td><input type='checkbox' value='", $data["name"], "'",
-			($priv <= $targetpriv or $data["isDeleted"]) ? " disabled" : "", " /></td><td>",
-			$data["name"], $data["name"] === $username ? "<small class='text-primary'>(you)</small>" : "", "</td><td>",
-			$data["score"], "</td><td>",
-			$priv_text[$targetpriv], "</td></tr>", PHP_EOL;
+		echo_admin_r($data, $priv <= $targetpriv, $data["name"] === $username);
 	}
 	$user_count++;
 }
