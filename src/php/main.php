@@ -94,42 +94,30 @@ function formatJSON($obj,  $indent = 4, $level = 0) {
 		return formatJSON_array($obj, $indent, $level);
 	} else if (is_array($obj)) {
 		return formatJSON_object($obj, $indent, $level);
-	} else if (is_string($obj) or is_bool($obj) or is_numeric($obj) or is_null($obj)) {
-		return json_encode($obj);
 	} else {
-		throw new Exception("Function formatJSON error: unknown type");
+		return json_encode($obj);
 	}
 }
 
 function backtrace_item_to_string($item) {
 	$str = "";
-	if (isset($item["class"])) {
-		$str .= $item["class"];
-	}
-	if (isset($item["type"])) {
-		$str .= $item["type"];
-	}
-	if (isset($item["function"])) {
-		$str .= $item["function"];
-	}
+	isset($item["class"]) and $str .= $item["class"];
+	isset($item["type"]) and $str .= $item["type"];
+	isset($item["function"]) and $str .= $item["function"];
 	if (isset($item["args"]) && $item["function"] != "err_handler") {
 		$str .= "(";
 		for ($j = 0; $j < count($item["args"]); $j++) {
-			if ($j != 0)
-				$str .= ", ";
+			if ($j != 0) $str .= ", ";
 			$str .= formatJSON($item["args"][$j], 4, 1);
 		}
 		$str .= ")";
 	}
 	if (isset($item["file"])) {
-		$str .= " (";
-		$str .= $item["file"];
-		if (isset($item["line"]))
-			$str .= ":" . $item["line"];
+		$str .= " (" . $item["file"];
+		isset($item["line"]) and $str .= ":" . $item["line"];
 		$str .= ")";
 	}
-	if (isset($item["object"]))
-		$str .= PHP_EOL . formatJSON($item["object"], 4, 1);
+	isset($item["object"]) and $str .= PHP_EOL . formatJSON($item["object"], 4, 1);
 	$str .= PHP_EOL;
 	return $str;
 }
