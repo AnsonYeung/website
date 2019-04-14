@@ -19,26 +19,17 @@ $backtrace = debug_backtrace();
  */
 
 function errno_tostring($errno) {
-    switch ($errno) {
-        case E_ERROR:              $err_message = "ERROR";               break;
-        case E_WARNING:            $err_message = "WARNING";             break;
-        case E_PARSE:              $err_message = "PARSE";               break;
-        case E_NOTICE:             $err_message = "NOTICE";              break;
-        case E_CORE_ERROR:         $err_message = "CORE_ERROR";          break;
-        case E_CORE_WARNING:       $err_message = "CORE_WARNING";        break;
-        case E_COMPILE_ERROR:      $err_message = "COMPILE_ERROR";       break;
-        case E_COMPILE_WARNING:    $err_message = "COMPILE_WARNING";     break;
-        case E_USER_ERROR:         $err_message = "USER_ERROR";          break;
-        case E_USER_WARNING:       $err_message = "USER_WARNING";        break;
-        case E_USER_NOTICE:        $err_message = "USER_NOTICE";         break;
-        case E_STRICT:             $err_message = "STRICT";              break;
-        case E_RECOVERABLE_ERROR:  $err_message = "RECOVERABLE_ERROR";   break;
-        case E_DEPRECATED:         $err_message = "DEPRECATED";          break;
-        case E_USER_DEPRECATED:    $err_message = "USER_DEPRECATED";     break;
-        case E_ALL:                $err_message = "ALL";                 break;
-        default:                   $err_message = "Error code ".$errno;  break;
-    }
-    return $err_message;
+	static $messages = array("ERROR", "WARNING", "PARSE", "NOTICE", "CORE_ERROR",
+		"CORE_WARNING", "COMPILE_ERROR", "COMPILE_WARNING", "USER_ERROR", "USER_WARNING",
+		"USER_NOTICE", "STRICT", "RECOVERABLE_ERROR", "DEPRECATED", "USER_DEPRECATED",
+		"ALL");
+	foreach ($messages as $v) {
+		if ($errno === 1) {
+			return $v;
+		}
+		$errno = (int)($errno / 2);
+	}
+	return "UNKNOWN";
 }
 
 /**
@@ -48,19 +39,46 @@ function errno_tostring($errno) {
  * @param string errstr
  * @param string (optional) errfile
  * @param int (optional) errline
- * @param array (optional) errcontext
  * @return bool should futher php action be prevented
  * 
  */
 
-function err_handler($errno, $errstr, $errfile, $errline, $errcontext) {
-    // Allow suppressing errors through @(stfu)
-    if (error_reporting() !== 0) {
-        slog(errno_tostring($errno), " at ", $errfile, ":", $errline, " ", $errstr);
-    }
+function err_handler($errno, $errstr, $errfile, $errline) {
+	// Allow suppressing errors through @(stfu)
+	if (error_reporting() !== 0) {
+		slog(errno_tostring($errno), " at ", $errfile, ":", $errline, " ", $errstr);
+	}
 }
 
 set_error_handler("err_handler", E_ALL);
+
+function formatJSON_array($obj, $indent, $level) {
+	if (count($obj) === 0) {
+		return "[]";
+	} else {
+		$indent_unit = str_repeat(" ", $indent);
+		$output = "[" . PHP_EOL;
+		$cindent = str_repeat($indent_unit, ++$level);
+		foreach ($obj as $item) {
+			$output .= $cindent . formatJSON($item, $indent, $level) . "," . PHP_EOL;
+		}
+		$cindent = str_repeat($indent_unit, --$level);
+		$output = substr($output, 0, strlen($output) - 2) . PHP_EOL . $cindent . "]";
+		return $output;
+	}
+}
+
+function formatJSON_object($obj, $indent, $level) {
+	$indent_unit = str_repeat(" ", $indent);
+	$output = "{" . PHP_EOL;
+	$cindent = str_repeat($indent_unit, ++$level);
+	foreach ($obj as $key => $val) {
+		$output .= $cindent . json_encode($key) . ": " . formatJSON($val, $indent, $level) . "," . PHP_EOL;
+	}
+	$cindent = str_repeat($indent_unit, --$level);
+	$output = substr($output, 0, strlen($output) - 2) . PHP_EOL . $cindent . "}";
+	return $output;
+}
 
 /**
  * get formatted JSON
@@ -70,39 +88,50 @@ set_error_handler("err_handler", E_ALL);
  */
 
 function formatJSON($obj,  $indent = 4, $level = 0) {
-    $indent_unit = str_repeat(" ", $indent);
-    $cindent = str_repeat($indent_unit, $level);
-    $output = "";
-    if (is_array($obj) && array_keys($obj) === range(0, count($obj) - 1)) {
-        if (count($obj) === 0) {
-            $output = "[]";
-        } else {
-            $output = "[" . PHP_EOL;
-            $cindent = str_repeat($indent_unit, ++$level);
-            foreach ($obj as $item) {
-                $output .= $cindent . formatJSON($item, $indent, $level) . "," . PHP_EOL;
-            }
-            $cindent = str_repeat($indent_unit, --$level);
-            $output = substr($output, 0, strlen($output) - 2) . PHP_EOL . $cindent . "]";
-        }
-    } else if (is_array($obj)) {
-        if (count($obj) === 0) {
-            $output = "{}";
-        } else {
-            $output = "{" . PHP_EOL;
-            $cindent = str_repeat($indent_unit, ++$level);
-            foreach ($obj as $key => $val) {
-                $output .= $cindent . json_encode($key) . ": " . formatJSON($val, $indent, $level) . "," . PHP_EOL;
-            }
-            $cindent = str_repeat($indent_unit, --$level);
-            $output = substr($output, 0, strlen($output) - 2) . PHP_EOL . $cindent . "}";
-        }
-    } else if (is_string($obj) or is_bool($obj) or is_numeric($obj) or is_null($obj)) {
-        $output = json_encode($obj);
-    } else {
-        throw new Exception("Function formatJSON error: unknown type");
-    }
-    return $output;
+	$indent_unit = str_repeat(" ", $indent);
+	$cindent = str_repeat($indent_unit, $level);
+	if (is_array($obj) && array_keys($obj) === range(0, count($obj) - 1)) {
+		return formatJSON_array($obj, $indent, $level);
+	} else if (is_array($obj)) {
+		return formatJSON_object($obj, $indent, $level);
+	} else if (is_string($obj) or is_bool($obj) or is_numeric($obj) or is_null($obj)) {
+		return json_encode($obj);
+	} else {
+		throw new Exception("Function formatJSON error: unknown type");
+	}
+}
+
+function backtrace_item_to_string($item) {
+	$str = "";
+	if (isset($item["class"])) {
+		$str .= $item["class"];
+	}
+	if (isset($item["type"])) {
+		$str .= $item["type"];
+	}
+	if (isset($item["function"])) {
+		$str .= $item["function"];
+	}
+	if (isset($item["args"]) && $item["function"] != "err_handler") {
+		$str .= "(";
+		for ($j = 0; $j < count($item["args"]); $j++) {
+			if ($j != 0)
+				$str .= ", ";
+			$str .= formatJSON($item["args"][$j], 4, 1);
+		}
+		$str .= ")";
+	}
+	if (isset($item["file"])) {
+		$str .= " (";
+		$str .= $item["file"];
+		if (isset($item["line"]))
+			$str .= ":" . $item["line"];
+		$str .= ")";
+	}
+	if (isset($item["object"]))
+		$str .= PHP_EOL . formatJSON($item["object"], 4, 1);
+	$str .= PHP_EOL;
+	return $str;
 }
 
 /**
@@ -112,46 +141,22 @@ function formatJSON($obj,  $indent = 4, $level = 0) {
  * @param object optional=debug_backtrace(): the backtrace
  */
 function writeBacktrace($handle, $backtrace = NULL) {
-    if (is_null($backtrace)) {
-        $backtrace = debug_backtrace();
-    }
-    $str = "";
-    // ignore the first two item (the caller and callee of the function)
+	if (is_null($backtrace)) {
+		$backtrace = debug_backtrace();
+	}
+	$str = "";
+	// ignore the first two item (the caller and callee of the function)
 	for ($i = 2; $i < count($backtrace); $i++) {
-        $curItem = $backtrace[$i];
-        $str .= "    at ";
-        if (isset($curItem["class"]))
-            $str .= $curItem["class"];
-        if (isset($curItem["type"]))
-            $str .= $curItem["type"];
-        if (isset($curItem["function"]))
-            $str .= $curItem["function"];
-        if (isset($curItem["args"]) && $curItem["function"] != "err_handler") {
-            $str .= "(";
-            for ($j = 0; $j < count($curItem["args"]); $j++) {
-                if ($j != 0)
-                    $str .= ", ";
-                $str .= formatJSON($curItem["args"][$j], 4, 1);
-            }
-            $str .= ")";
-        }
-        if (isset($curItem["file"])) {
-            $str .= " (";
-            $str .= $curItem["file"];
-            if (isset($curItem["line"]))
-                $str .= ":" . $curItem["line"];
-            $str .= ")";
-        }
-        if (isset($curItem["object"]))
-            $str .= PHP_EOL . formatJSON($curItem["object"], 4, 1);
-        $str .= PHP_EOL;
-    }
-    if (is_null($handle)) {
-        return $str;
-    } else {
-        fwrite($handle, $str);
-    }
+		$curItem = $backtrace[$i];
+		$str .= "    at " . backtrace_item_to_string($curItem);
+	}
+	if (is_null($handle)) {
+		return $str;
+	} else {
+		fwrite($handle, $str);
+	}
 }
+
 /**
  * log the message to the server.log
  *
@@ -161,25 +166,23 @@ function writeBacktrace($handle, $backtrace = NULL) {
  */
 
 function slog() {
-    static $handle = NULL;
-    if (!$handle) {
-        $handle = fopen(__DIR__."/../public_html/databases/server.log", "a");
-        if (!$handle) throw new Exception("Couldn't open the server log");
-    }
-    fwrite($handle, "[" . date(DATE_ATOM) . "] ");
-    $boolArg = true;
-    foreach (func_get_args() as $value) {
-        if (is_bool($value)) {
-            $boolArg = $value;
-        } else {
-            fwrite($handle, $value);
-        }
-    }
-    fwrite($handle, PHP_EOL);
-    if ($boolArg) {
-        writeBacktrace($handle);
-    }
-    fwrite($handle, PHP_EOL);
+	static $handle = NULL;
+	$handle = $handle ? $handle : fopen(__DIR__."/../public_html/databases/server.log", "a");
+	if (!$handle) {
+		throw new Exception("Couldn't open the server log");
+	}
+	fwrite($handle, "[" . date(DATE_ATOM) . "] ");
+	$boolArg = true;
+	foreach (func_get_args() as $value) {
+		if (is_bool($value)) {
+			$boolArg = $value;
+		} else {
+			fwrite($handle, $value);
+		}
+	}
+	fwrite($handle, PHP_EOL);
+	$boolArg and writeBacktrace($handle);
+	fwrite($handle, PHP_EOL);
 }
 
 /**
@@ -190,7 +193,7 @@ function slog() {
  * @param mixed $default The fallback value
  */
 function get($array, $key, $default) {
-    return isset($array[$key]) ? $array[$key] : $default;
+	return isset($array[$key]) ? $array[$key] : $default;
 }
 
 /**
@@ -200,7 +203,7 @@ function get($array, $key, $default) {
  * @param string $key The array key to get the value
  */
 function getorban($array, $key) {
-    return isset($array[$key]) ? $array[$key] : ban();
+	return isset($array[$key]) ? $array[$key] : ban();
 }
 
 /**
@@ -209,36 +212,17 @@ function getorban($array, $key) {
  * @param void
  */
 function ban() {
-    global $school, $localuri, $uri, $style_nonce;
-    header("HTTP/1.1 404 Not Found");
-    session_write_close();
-    if (isset($_GET["REDIRECT_URI"])) {
-        $_SERVER["REQUEST_URI"] = $_GET["REDIRECT_URI"];
-    }
-    require __DIR__ . "/../public_html/_/404.php";
-    die();
+	global $school, $localuri, $uri, $style_nonce;
+	header("HTTP/1.1 404 Not Found");
+	session_write_close();
+	if (isset($_GET["REDIRECT_URI"])) {
+		$_SERVER["REQUEST_URI"] = $_GET["REDIRECT_URI"];
+	}
+	require __DIR__ . "/../public_html/_/404.php";
+	die();
 }
 
-/**
- * Slightly modified version of http://www.geekality.net/2011/05/28/php-tail-tackling-large-files/
- * @author Torleif Berger, Lorenzo Stanco
- * @link http://stackoverflow.com/a/15025877/995958
- * @license http://creativecommons.org/licenses/by/3.0/
- */
-function tail_custom($filepath, $lines = 1, $adaptive = true) {
-	// Open file
-	$f = @fopen($filepath, "rb");
-	if ($f === false) return false;
-	// Sets buffer size, according to the number of lines to retrieve.
-	// This gives a performance boost when reading a few lines from the file.
-	if (!$adaptive) $buffer = 4096;
-	else $buffer = ($lines < 2 ? 64 : ($lines < 10 ? 512 : 4096));
-	// Jump to last character
-	fseek($f, -1, SEEK_END);
-	// Read it and adjust line number if necessary
-	// (Otherwise the result would be wrong if file doesn't end with a blank line)
-	if (fread($f, 1) != "\n") $lines -= 1;
-
+function ftail($f, $lines, $buffer) {
 	// Start reading
 	$output = '';
 	$chunk = '';
@@ -261,6 +245,29 @@ function tail_custom($filepath, $lines = 1, $adaptive = true) {
 		// Find first newline and remove all text before that
 		$output = substr($output, strpos($output, "\n") + 1);
 	}
+	return $output;
+}
+
+/**
+ * Slightly modified version of http://www.geekality.net/2011/05/28/php-tail-tackling-large-files/
+ * @author Torleif Berger, Lorenzo Stanco
+ * @link http://stackoverflow.com/a/15025877/995958
+ * @license http://creativecommons.org/licenses/by/3.0/
+ */
+function tail_custom($filepath, $lines = 1, $adaptive = true) {
+	// Open file
+	$f = @fopen($filepath, "rb");
+	if ($f === false) return false;
+	// Sets buffer size, according to the number of lines to retrieve.
+	// This gives a performance boost when reading a few lines from the file.
+	if (!$adaptive) $buffer = 4096;
+	else $buffer = ($lines < 2 ? 64 : ($lines < 10 ? 512 : 4096));
+	// Jump to last character
+	fseek($f, -1, SEEK_END);
+	// Read it and adjust line number if necessary
+	// (Otherwise the result would be wrong if file doesn't end with a blank line)
+	if (fread($f, 1) != "\n") $lines -= 1;
+	$output = ftail($f, $lines, $buffer);
 	// Close file and return
 	fclose($f);
 	return trim($output);
@@ -294,90 +301,90 @@ function echo_admin_r($data, $perm, $you) {
 class Database
 {
 
-    private $fhandle, $locked = FALSE;
+	private $fhandle, $locked = FALSE;
 
-    /**
-     * Database constructor
-     */
-    public function __construct($name)
-    {
-        $this->fhandle = fopen(__DIR__ . "/../public_html/databases/" . $name . ".json", "r+");
-        if (!($this->fhandle)) throw new Exception("Database " . $name . " couldn't be opened.");
-    }
+	/**
+	 * Database constructor
+	 */
+	public function __construct($name)
+	{
+		$this->fhandle = fopen(__DIR__ . "/../public_html/databases/" . $name . ".json", "r+");
+		if (!($this->fhandle)) throw new Exception("Database " . $name . " couldn't be opened.");
+	}
 
-    /**
-     * function read
-     *
-     * @param void
-     * @return mixed[] database content
-     */
-    public function read()
-    {
-        flock($this->fhandle, LOCK_SH);
-        rewind($this->fhandle);
-        $result = json_decode(stream_get_contents($this->fhandle), TRUE);
-        flock($this->fhandle, LOCK_UN | LOCK_NB);
-        return $result;
-    }
+	/**
+	 * function read
+	 *
+	 * @param void
+	 * @return mixed[] database content
+	 */
+	public function read()
+	{
+		flock($this->fhandle, LOCK_SH);
+		rewind($this->fhandle);
+		$result = json_decode(stream_get_contents($this->fhandle), TRUE);
+		flock($this->fhandle, LOCK_UN | LOCK_NB);
+		return $result;
+	}
 
-    /**
-     * function is_locked
-     *
-     * @param void
-     * @return bool
-     */
-    public function is_locked()
-    {
-        return $this->locked;
-    }
+	/**
+	 * function is_locked
+	 *
+	 * @param void
+	 * @return bool
+	 */
+	public function is_locked()
+	{
+		return $this->locked;
+	}
 
 
-    /**
-     * function lock
-     *
-     * @param void
-     * @return mixed[] database content
-     */
-    public function lock()
-    {
-        if ($this->locked) throw new Exception("Database is already locked");
-        $this->locked = flock($this->fhandle, LOCK_EX);
-        return $this->read();
-    }
+	/**
+	 * function lock
+	 *
+	 * @param void
+	 * @return mixed[] database content
+	 */
+	public function lock()
+	{
+		if ($this->locked) throw new Exception("Database is already locked");
+		$this->locked = flock($this->fhandle, LOCK_EX);
+		return $this->read();
+	}
 
-    /**
-     * function unlock
-     *
-     * @param mixed[] $data database content
-     * @return bool Is operation success
-     */
-    public function unlock($data = NULL)
-    {
-        if (!$this->locked) throw new Exception("Unlock is called before locking");
-        if (!is_null($data)) {
-            // slog(PHP_EOL, "Original data = ", PHP_EOL, json_encode($this->read()));
-            ftruncate($this->fhandle, 0);
-            rewind($this->fhandle);
-            $result = fwrite($this->fhandle, json_encode($data));
-        }
-        $this->locked = !flock($this->fhandle, LOCK_UN);
-        return is_null($data) ? $this->locked : $result and $this->locked;
-    }
+	/**
+	 * function unlock
+	 *
+	 * @param mixed[] $data database content
+	 * @return bool Is operation success
+	 */
+	public function unlock($data = NULL)
+	{
+		if (!$this->locked) throw new Exception("Unlock is called before locking");
+		if (!is_null($data)) {
+			// slog(PHP_EOL, "Original data = ", PHP_EOL, json_encode($this->read()));
+			ftruncate($this->fhandle, 0);
+			rewind($this->fhandle);
+			$result = fwrite($this->fhandle, json_encode($data));
+		}
+		$this->locked = !flock($this->fhandle, LOCK_UN);
+		return is_null($data) ? $this->locked : $result and $this->locked;
+	}
 
-    /**
-     * Database destructor
-     *
-     * If one of the script forget to unlock the database, unlock the database and slog it.
-     */
-    public function __destruct()
-    {
-        if ($this->locked) {
-            flock($this->fhandle, LOCK_UN);
-            $backtrace = $GLOBALS["backtrace"];
-            $output = "Database not closed on end of file".PHP_EOL;
-            $output.= writeBacktrace(NULL, $backtrace);
-            slog($output, false);
-        }
-    }
+	/**
+	 * Database destructor
+	 *
+	 * If one of the script forget to unlock the database, unlock the database and slog it.
+	 */
+	public function __destruct()
+	{
+		if ($this->locked) {
+			flock($this->fhandle, LOCK_UN);
+			$backtrace = $GLOBALS["backtrace"];
+			$output = "Database not closed on end of file".PHP_EOL;
+			$output.= writeBacktrace(NULL, $backtrace);
+			slog($output, false);
+		}
+	}
 }
 ?>
