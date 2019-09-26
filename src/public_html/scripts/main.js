@@ -6,19 +6,20 @@
  */
 export function jsImport(urls) {
 	return urls.reduce((previous, current) => {
-		const p = import(current);
-		return previous.catch(() => p);
+		return previous.catch(() => {
+			return import(current);
+		});
 	}, Promise.reject()).then(() => null);
 }
 
 export function loadGapi(onLoad) {
-	if (window.gapi) {
-		onLoad(window.gapi);
+	if (typeof gapi !== "undefined") {
+		onLoad(gapi);
 	} else {
-		const g = document.getElementById("gapi");
+		const g = document.getElementById("GAPI");
 		g.addEventListener("load", function onScriptLoad() {
 			g.removeEventListener("load", onScriptLoad);
-			onLoad(window.gapi);
+			onLoad(gapi);
 		});
 	}
 }

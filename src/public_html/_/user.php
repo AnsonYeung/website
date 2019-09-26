@@ -15,7 +15,7 @@ if (isset($_SESSION['151204-username']) and $_SESSION['151204-username'] === $us
 }
 ?>
 <title>User <?php echo $user_name ?> - YSH</title>
-<script src="https://apis.google.com/js/platform.js" async id="gapi"></script>
+<script src="https://apis.google.com/js/platform.js" async id="GAPI"></script>
 <script src="/~S151204/scripts/profile.js" type="module" async></script>
 <style nonce="<?php echo $style_nonce ?>">
 <?php include __DIR__ . "/../style/bootstrap.inline.css" ?>
