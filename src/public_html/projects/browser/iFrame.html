@@ -4,16 +4,16 @@
 		<title>/~S151204/browse (with UI)</title>
 	</head>
 	<body style="margin:0">
-		<input value="http://hk.bing.com/" style="width:75%">
-		<button onclick="document.body.children[3].src=this.previousElementSibling.value.startsWith('http://student.tanghin.edu.hk/~S151204/browse?url=')?this.previousElementSibling.value:'/~S151204/browse?url='+encodeURIComponent(this.previousElementSibling.value)">GO TO SITE</button>
+		<input value="http://bing.com/" style="width:75%">
+		<button onclick="document.body.children[3].src=this.previousElementSibling.value.startsWith('http:/\/student.tanghin.edu.hk/~S151204/browse?url=')?this.previousElementSibling.value:'/~S151204/browse?url='+encodeURIComponent(this.previousElementSibling.value)">GO TO SITE</button>
 		<br>
 		<iframe id="i"
-			src="../../browse?url=http://hk.bing.com/"
+			src="../../browse?url=http://bing.com/"
 			style="border:0"
 			width="100%"></iframe>
 		<script>
 			document.getElementById("i").onload = function () {
-				document.body.children[0].value=this.contentWindow.location.startsWith('http://student.tanghin.edu.hk/~S151204/browse?')?decodeURIComponent(this.contentWindow.location.search.substr(5)):decodeURIComponent(this.contentWindow.location);
+				document.body.children[0].value=this.contentWindow.location.pathname==='/~S151204/browse?'?decodeURIComponent(this.contentWindow.location.search.substr(5)):decodeURIComponent(this.contentWindow.location);
 			};
 			var a = function() {
 				document.getElementById("i").height = window.innerHeight - 25;

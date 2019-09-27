@@ -1,1 +1,0 @@
-<?php header("Location: https://drive.google.com/open?id=1pyAhRLL9PRvaRaInT-XDbz6UDSZ2o-gx"); ?>
