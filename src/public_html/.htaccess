@@ -60,6 +60,8 @@ RewriteRule "^(_|databases|fonts|images|media|scripts|style)\/?$" - [R=404,L]
 RedirectMatch 410 "^\/~S151204\/files(\/.*)?"
 
 # Ban the usage of bad-url
+# RewriteCond "%{ENV:REDIRECT_STATUS} ".+"
+# RewriteRule .* - [S=3]
 RewriteCond "%{ENV:REDIRECT_STATUS}" "^$"
 RewriteRule "(.*)\.php$" "$1" [E=R:true]
 RewriteCond "%{ENV:REDIRECT_STATUS}" "^$"
